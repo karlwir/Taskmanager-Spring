@@ -15,12 +15,18 @@ public class Issue {
 	private Long id;
 	@Column(nullable = false)
 	private String description;
+	@Column(nullable = false)
+	private boolean openIssue;
+	@Column(nullable = false)
+	private long workitemId;
 
 	protected Issue() {
 	}
 
-	public Issue(String description) {
+	public Issue(Workitem workitem, String description, boolean openIssue) {
 		this.description = description;
+		this.openIssue = openIssue;
+		workitemId = workitem.getId();
 	}
 
 	public Long getId() {
@@ -31,9 +37,18 @@ public class Issue {
 		return description;
 	}
 
+	public long getWorkitemId() {
+		return workitemId;
+	}
+
+	public boolean isOpenIssue() {
+		return openIssue;
+	}
+
 	@Override
 	public String toString() {
-		return "Issue " + id + ", description: " + description;
+		return "Issue " + id + ", description: " + description + ", is open: " + openIssue + ", workitem id: "
+				+ workitemId;
 	}
 
 }
