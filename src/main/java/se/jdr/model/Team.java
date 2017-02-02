@@ -2,17 +2,12 @@ package se.jdr.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "teams")
-public class Team {
+public class Team extends AbstractEntity {
 
-	@Id
-	@GeneratedValue
-	private Long id;
 	@Column(nullable = false, unique = true)
 	private String teamName;
 	@Column(nullable = false)
@@ -26,10 +21,6 @@ public class Team {
 		this.activeTeam = activeTeam;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public String getTeamName() {
 		return teamName;
 	}
@@ -40,7 +31,7 @@ public class Team {
 
 	@Override
 	public String toString() {
-		return "Team id: " + id + ", team name: " + teamName + ", active: " + activeTeam;
+		return "Team id: " + super.getId() + ", team name: " + teamName + ", active: " + activeTeam;
 	}
 
 }

@@ -2,17 +2,12 @@ package se.jdr.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "work_items")
-public class Workitem {
+public class Workitem extends AbstractEntity {
 
-	@Id
-	@GeneratedValue
-	private Long id;
 	@Column(nullable = false)
 	private String title;
 	@Column(nullable = false)
@@ -22,6 +17,7 @@ public class Workitem {
 	@Column(nullable = false)
 	private int assignedUserId;
 	private String dateOfCompletion;
+	private Issue issue;
 
 	protected Workitem() {
 	}
@@ -32,10 +28,6 @@ public class Workitem {
 		this.status = status;
 		this.assignedUserId = assignedUserId;
 		this.dateOfCompletion = dateOfCompletion;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getTitle() {
@@ -58,10 +50,14 @@ public class Workitem {
 		return dateOfCompletion;
 	}
 
+	public void setIssue(Issue issue) {
+		this.issue = issue;
+	}
+
 	@Override
 	public String toString() {
-		return "Workitem " + id + ", title: " + title + ", description: " + description + ", status: " + status
-				+ ", assignedUserId: " + assignedUserId + ", dateOfCompletion: " + dateOfCompletion;
+		return "Workitem " + super.getId() + ", title: " + title + ", description: " + description + ", status: "
+				+ status + ", assignedUserId: " + assignedUserId + ", dateOfCompletion: " + dateOfCompletion;
 	}
 
 }
