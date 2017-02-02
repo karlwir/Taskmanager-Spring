@@ -25,9 +25,9 @@ public class Config {
 	DataSource dataSource() {
 		HikariConfig config = new HikariConfig();
 		config.setDriverClassName("com.mysql.jdbc.Driver");
-		config.setJdbcUrl("jdbc:mysql://localhost:3306/taskmanager-spring-database?useSSL=false");
+		config.setJdbcUrl("jdbc:mysql://localhost:3306/taskmanagerspringdatabase?useSSL=false");
 		config.setUsername("rkd3j");
-		config.setUsername("password");
+		config.setPassword("password");
 
 		return new HikariDataSource(config);
 	}
