@@ -1,5 +1,8 @@
 package se.jdr;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,14 +28,17 @@ public class TaskmanagerSpringApplication {
 			WorkitemRepository workrepo = context.getBean(WorkitemRepository.class);
 
 			Workitem workitem = workrepo.save(new Workitem("title", "description"));
-			User user = repo.save(new User("121", "firstname", "lastname", true));
 			System.out.println(workitem);
+			User user = new User("1212", "firstname", "lastname", true);
+			repo.save(user);
 
 			workitem.setDateOfCompletion("2014");
 			workrepo.save(workitem);
+			List<User> list = new ArrayList(repo.findByFirstname("firstname"));
 
 			System.out.println(user);
 			System.out.println(workitem);
+			list.forEach(System.out::println);
 		};
 	}
 }

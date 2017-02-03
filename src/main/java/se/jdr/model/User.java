@@ -33,7 +33,6 @@ public class User extends AbstractEntity {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.activeUser = activeUser;
-
 	}
 
 	public String getUsername() {
