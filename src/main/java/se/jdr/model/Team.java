@@ -26,6 +26,10 @@ public class Team extends AbstractEntity {
 		this.activeTeam = activeTeam;
 	}
 
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
+
 	public String getTeamName() {
 		return teamName;
 	}
