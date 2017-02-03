@@ -28,21 +28,25 @@ public class TaskmanagerSpringApplication {
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
 			UserService service = context.getBean(UserService.class);
-//			service.addOrUpdateUser(new User("121", "firstname", "lastname", "12", true));
-//			service.addOrUpdateUser(new User("122", "firstname", "lastname", "13", true));
+			service.addOrUpdateUser(new User("121", "firstname", "lastname", "12", true));
+			service.addOrUpdateUser(new User("122", "firstname", "lastname", "13", true));
 			User user = service.addOrUpdateUser(new User("joats", "joakim", "holmgren", "14", true));
-			
 			TeamRepository teamRepository = context.getBean(TeamRepository.class);
+			UserRepository userrepo = context.getBean(UserRepository.class);
 			
 			Team team = teamRepository.save(new Team("team", true));
+			user.setTeam(team);
+			service.addOrUpdateUser(user);
+			System.out.println(userrepo.findByTeamId(2L));
 			Collection<User> users = new ArrayList();
 			users.add(user);
 			team.setUsers(users);
 			teamRepository.save(team);
 			
-			System.out.println(team.toString());
+			System.out.println(user);
 			
-			System.out.println(service.getUserByLastname("la"));
+			
+			System.out.println(teamRepository);
 			
 			
 		};
