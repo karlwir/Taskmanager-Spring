@@ -1,15 +1,21 @@
 package se.jdr;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import se.jdr.model.Team;
 import se.jdr.model.User;
 import se.jdr.model.Workitem;
-import se.jdr.repository.UserrRepository;
+import se.jdr.repository.TeamRepository;
+import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkitemRepository;
+import se.jdr.service.UserService;
 
 @SpringBootApplication
 public class TaskmanagerSpringApplication {
@@ -21,18 +27,24 @@ public class TaskmanagerSpringApplication {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			UserrRepository repo = context.getBean(UserrRepository.class);
-			WorkitemRepository workrepo = context.getBean(WorkitemRepository.class);
-
-			Workitem workitem = workrepo.save(new Workitem("title", "description"));
-			User user = repo.save(new User("121", "firstname", "lastname", true));
-			System.out.println(workitem);
-
-			workitem.setDateOfCompletion("2014");
-			workrepo.save(workitem);
-
-			System.out.println(user);
-			System.out.println(workitem);
+			UserService service = context.getBean(UserService.class);
+//			service.addOrUpdateUser(new User("121", "firstname", "lastname", "12", true));
+//			service.addOrUpdateUser(new User("122", "firstname", "lastname", "13", true));
+			User user = service.addOrUpdateUser(new User("joats", "joakim", "holmgren", "14", true));
+			
+			TeamRepository teamRepository = context.getBean(TeamRepository.class);
+			
+			Team team = teamRepository.save(new Team("team", true));
+			Collection<User> users = new ArrayList();
+			users.add(user);
+			team.setUsers(users);
+			teamRepository.save(team);
+			
+			System.out.println(team.toString());
+			
+			System.out.println(service.getUserByLastname("la"));
+			
+			
 		};
-	}
+	}	
 }

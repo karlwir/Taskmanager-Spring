@@ -18,6 +18,8 @@ public class User extends AbstractEntity {
 	private String firstname;
 	@Column(nullable = false)
 	private String lastname;
+	@Column(nullable = false, unique = true)
+	private String userId;
 	@Column(nullable = false)
 	private boolean activeUser;
 	@ManyToOne
@@ -28,12 +30,12 @@ public class User extends AbstractEntity {
 	protected User() {
 	}
 
-	public User(String username, String firstname, String lastname, boolean activeUser) {
+	public User(String username, String firstname, String lastname, String userId, boolean activeUser) {
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.activeUser = activeUser;
-
+		this.userId = userId;
 	}
 
 	public String getUsername() {
@@ -46,6 +48,10 @@ public class User extends AbstractEntity {
 
 	public String getLastname() {
 		return lastname;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public boolean isActiveUser() {
@@ -63,7 +69,7 @@ public class User extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "User " + getId() + ", username: " + username + ", firstname: " + firstname + ", lastname: " + lastname
-				+ ", active: " + activeUser + ", teamId: " + team;
+				+ "userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
 	}
 
 }
