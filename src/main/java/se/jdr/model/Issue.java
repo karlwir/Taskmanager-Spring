@@ -2,6 +2,7 @@ package se.jdr.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,8 +13,8 @@ public class Issue extends AbstractEntity {
 	private String description;
 	@Column(nullable = false)
 	private boolean openIssue;
-	@Column(nullable = false)
-	private long workitemId;
+	@ManyToOne
+	private Workitem workitem;
 
 	protected Issue() {
 	}
@@ -21,15 +22,11 @@ public class Issue extends AbstractEntity {
 	public Issue(Workitem workitem, String description, boolean openIssue) {
 		this.description = description;
 		this.openIssue = openIssue;
-		workitemId = workitem.getId();
+		this.workitem = workitem;
 	}
 
 	public String getDescription() {
 		return description;
-	}
-
-	public long getWorkitemId() {
-		return workitemId;
 	}
 
 	public boolean isOpenIssue() {
@@ -38,8 +35,8 @@ public class Issue extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Issue " + super.getId() + ", description: " + description + ", is open: " + openIssue
-				+ ", workitem id: " + workitemId;
+		return "Issue " + getId() + ", description: " + description + ", is open: " + openIssue + ", workitem id: "
+				+ workitem;
 	}
 
 }

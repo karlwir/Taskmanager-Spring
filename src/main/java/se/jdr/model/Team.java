@@ -1,7 +1,10 @@
 package se.jdr.model;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,6 +15,8 @@ public class Team extends AbstractEntity {
 	private String teamName;
 	@Column(nullable = false)
 	private boolean activeTeam;
+	@OneToMany(mappedBy = "team")
+	Collection<User> users;
 
 	protected Team() {
 	}
@@ -31,7 +36,7 @@ public class Team extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "Team id: " + super.getId() + ", team name: " + teamName + ", active: " + activeTeam;
+		return "Team id: " + getId() + ", team name: " + teamName + ", active: " + activeTeam;
 	}
 
 }
