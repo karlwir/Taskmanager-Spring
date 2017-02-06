@@ -30,6 +30,10 @@ public class Team extends AbstractEntity {
 		this.users = users;
 	}
 
+	public void setActiveTeam(boolean activeTeam) {
+		this.activeTeam = activeTeam;
+	}
+
 	public String getTeamName() {
 		return teamName;
 	}
