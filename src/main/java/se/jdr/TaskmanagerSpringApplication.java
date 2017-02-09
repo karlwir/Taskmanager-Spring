@@ -6,10 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import se.jdr.model.User;
-import se.jdr.model.Workitem;
-import se.jdr.repository.UserRepository;
-import se.jdr.repository.WorkitemRepository;
+import se.jdr.model.Issue;
+import se.jdr.model.WorkItem;
+import se.jdr.service.IssueService;
+import se.jdr.service.TeamService;
+import se.jdr.service.UserService;
+import se.jdr.service.WorkItemService;
 
 @SpringBootApplication
 public class TaskmanagerSpringApplication {
@@ -21,19 +23,39 @@ public class TaskmanagerSpringApplication {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			UserRepository repo = context.getBean(UserRepository.class);
-			WorkitemRepository workrepo = context.getBean(WorkitemRepository.class);
+			UserService service = context.getBean(UserService.class);
+			TeamService teamService = context.getBean(TeamService.class);
+			IssueService issueService = context.getBean(IssueService.class);
+			// User user = service.addOrUpdateUser(new User("joats", "joakim",
+			// "holmgren", "14", true));
+			// User user2 = service.addOrUpdateUser(new User("danne", "Daniel",
+			// "kemter", "15", true));
 
-			Workitem workitem = workrepo.save(new Workitem("title", "description"));
-			System.out.println(workitem);
-			User user = new User("1212", "firstname", "lastname", "id?", true);
-			repo.save(user);
+			// Team team = teamService.addOrUpdateTeam(new Team("team", true));
+			WorkItemService workItemService = context.getBean(WorkItemService.class);
 
-			workitem.setDateOfCompletion("2014");
-			workrepo.save(workitem);
+			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+			issueService.addOrUpdate(new Issue(workItem, "issue", true));
 
-			System.out.println(user);
-			System.out.println(workitem);
+			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
+			//
+			// teamService.addUserToTeam(user, team);
+			// teamService.addUserToTeam(user2, team);
+			//
+			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
+			// user2);
+			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
+			// user);
+			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
+			// user2);
+			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
+			// user);
+
+			// workItemService.getAllWorkItemsByUser(user.getId()).forEach(System.out::println);
+
+			workItemService.getWorkItemByDescripton("item2").forEach(System.out::println);
+
+			// workItemService.getAllWorkItemsByTeam(team.getId()).forEach(System.out::println);;
 		};
 	}
 }

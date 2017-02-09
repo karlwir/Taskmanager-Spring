@@ -14,12 +14,12 @@ public class Issue extends AbstractEntity {
 	@Column(nullable = false)
 	private boolean openIssue;
 	@ManyToOne
-	private Workitem workitem;
+	private WorkItem workitem;
 
 	protected Issue() {
 	}
 
-	public Issue(Workitem workitem, String description, boolean openIssue) {
+	public Issue(WorkItem workitem, String description, boolean openIssue) {
 		this.description = description;
 		this.openIssue = openIssue;
 		this.workitem = workitem;

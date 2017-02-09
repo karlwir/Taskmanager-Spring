@@ -25,7 +25,7 @@ public class User extends AbstractEntity {
 	@ManyToOne
 	private Team team;
 	@OneToMany(mappedBy = "user")
-	private Collection<Workitem> workitems;
+	private Collection<WorkItem> workitems;
 
 	protected User() {
 	}
@@ -60,6 +60,10 @@ public class User extends AbstractEntity {
 
 	public Team getTeam() {
 		return team;
+	}
+
+	public void setActiveUser(boolean activeUser) {
+		this.activeUser = activeUser;
 	}
 
 	public void setTeam(Team team) {
