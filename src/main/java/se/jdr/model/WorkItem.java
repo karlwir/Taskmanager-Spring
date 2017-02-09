@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "workitems")
-public class Workitem extends AbstractEntity {
+public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String title;
@@ -27,10 +27,10 @@ public class Workitem extends AbstractEntity {
 	@OneToMany(mappedBy = "workitem")
 	private Collection<Issue> issues;
 
-	protected Workitem() {
+	protected WorkItem() {
 	}
 
-	public Workitem(String title, String description) {
+	public WorkItem(String title, String description) {
 		this.title = title;
 		this.description = description;
 		this.status = Status.STARTED;
@@ -56,6 +56,10 @@ public class Workitem extends AbstractEntity {
 		return dateOfCompletion;
 	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public void setIssues(Collection<Issue> issues) {
 		this.issues = issues;
 	}
@@ -64,8 +68,8 @@ public class Workitem extends AbstractEntity {
 		this.dateOfCompletion = dateOfCompletion;
 	}
 
-	public void setDateOfCompletion() {
-		setDateOfCompletion(LocalDate.now().toString());
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public enum Status {

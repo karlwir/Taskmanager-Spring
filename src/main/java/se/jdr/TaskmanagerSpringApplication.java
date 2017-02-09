@@ -9,13 +9,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import se.jdr.model.Issue;
 import se.jdr.model.Team;
 import se.jdr.model.User;
-import se.jdr.model.Workitem;
+import se.jdr.model.WorkItem;
 import se.jdr.repository.TeamRepository;
 import se.jdr.repository.UserRepository;
-import se.jdr.repository.WorkitemRepository;
+import se.jdr.repository.WorkItemRepository;
+import se.jdr.service.IssueService;
+import se.jdr.service.TeamService;
 import se.jdr.service.UserService;
+import se.jdr.service.WorkItemService;
 
 @SpringBootApplication
 public class TaskmanagerSpringApplication {
@@ -28,27 +32,32 @@ public class TaskmanagerSpringApplication {
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
 			UserService service = context.getBean(UserService.class);
-			service.addOrUpdateUser(new User("121", "firstname", "lastname", "12", true));
-			service.addOrUpdateUser(new User("122", "firstname", "lastname", "13", true));
-			User user = service.addOrUpdateUser(new User("joats", "joakim", "holmgren", "14", true));
-			TeamRepository teamRepository = context.getBean(TeamRepository.class);
-			UserRepository userrepo = context.getBean(UserRepository.class);
+			TeamService teamService = context.getBean(TeamService.class);
+			IssueService issueService = context.getBean(IssueService.class);
+//			User user = service.addOrUpdateUser(new User("joats", "joakim", "holmgren", "14", true));
+//			User user2 = service.addOrUpdateUser(new User("danne", "Daniel", "kemter", "15", true));
 			
-			Team team = teamRepository.save(new Team("team", true));
-			user.setTeam(team);
-			service.addOrUpdateUser(user);
-			System.out.println(userrepo.findByTeamId(2L));
-			Collection<User> users = new ArrayList();
-			users.add(user);
-			team.setUsers(users);
-			teamRepository.save(team);
+//			Team team = teamService.addOrUpdateTeam(new Team("team", true));
+			WorkItemService workItemService = context.getBean(WorkItemService.class);
 			
-			System.out.println(user);
+			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+			issueService.addOrUpdate(new Issue(workItem, "issue", true));
 			
+			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
+//			
+//			teamService.addUserToTeam(user, team);
+//			teamService.addUserToTeam(user2, team);
+//			
+//			workItemService.addUserToWorkItem(new WorkItem("work", "item"), user2);
+//			workItemService.addUserToWorkItem(new WorkItem("work", "item"), user);
+//			workItemService.addUserToWorkItem(new WorkItem("work2", "item2"), user2);
+//			workItemService.addUserToWorkItem(new WorkItem("work2", "item2"), user);
 			
-			System.out.println(teamRepository);
+//			workItemService.getAllWorkItemsByUser(user.getId()).forEach(System.out::println);
 			
+			workItemService.getWorkItemByDescripton("item2").forEach(System.out::println);
 			
+//			workItemService.getAllWorkItemsByTeam(team.getId()).forEach(System.out::println);;
 		};
 	}	
 }
