@@ -22,4 +22,6 @@ public interface WorkItemRepository extends CrudRepository<WorkItem, Long> {
 	@Query("select workItem from Issue i WHERE i.openIssue=1")
 	public Collection<WorkItem> getAllWorkItemsWithIssues();
 
+	Long countByUserId(Long userId);
+
 }

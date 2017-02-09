@@ -1,6 +1,5 @@
 package se.jdr.model;
 
-import java.time.LocalDate;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -24,7 +23,7 @@ public class WorkItem extends AbstractEntity {
 	@ManyToOne
 	private User user;
 	private String dateOfCompletion;
-	@OneToMany(mappedBy = "workitem")
+	@OneToMany(mappedBy = "workItem")
 	private Collection<Issue> issues;
 
 	protected WorkItem() {

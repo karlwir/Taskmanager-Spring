@@ -39,10 +39,16 @@ public final class TeamService {
 		return teams;
 	}
 
-	public void addUserToTeam(User user, Team team) {
+	public void addUserToTeam(User user, Team team) throws ServiceException {
 		Team teamToDB = teamRepository.save(team);
-		user.setTeam(teamToDB);
-		userRepository.save(user);
+		Long numberOfUsers = userRepository.countByTeamId(teamToDB.getId());
+
+		if (numberOfUsers < 10) {
+			user.setTeam(teamToDB);
+			userRepository.save(user);
+		} else {
+			throw new ServiceException("Team is full!");
+		}
 	}
 
 }

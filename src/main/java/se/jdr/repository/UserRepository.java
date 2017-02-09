@@ -18,4 +18,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 	Collection<User> findByTeamId(Long teamId);
 
+	Long countByTeamId(Long teamId);
+
 }

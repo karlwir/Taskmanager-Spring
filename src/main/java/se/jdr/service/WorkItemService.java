@@ -35,10 +35,14 @@ public final class WorkItemService {
 		workItemRepository.delete(workItem);
 	}
 
-	public void addUserToWorkItem(WorkItem workItem, User user) {
+	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
 		User userToDB = userRepository.save(user);
-		workItem.setUser(userToDB);
-		addOrUpdateWorkItem(workItem);
+		if (userToDB.isActiveUser() && workItemRepository.countByUserId(user.getId()) < 5) {
+			workItem.setUser(userToDB);
+			addOrUpdateWorkItem(workItem);
+		} else {
+			throw new ServiceException("user must be active and cannot have more than 5 work items");
+		}
 	}
 
 	public Collection<WorkItem> getWorkItemsByStatus(WorkItem.Status status) {
