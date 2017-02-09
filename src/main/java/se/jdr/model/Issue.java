@@ -14,7 +14,7 @@ public class Issue extends AbstractEntity {
 	@Column(nullable = false)
 	private boolean openIssue;
 	@ManyToOne
-	private WorkItem workitem;
+	private WorkItem workItem;
 
 	protected Issue() {
 	}
@@ -22,7 +22,7 @@ public class Issue extends AbstractEntity {
 	public Issue(WorkItem workitem, String description, boolean openIssue) {
 		this.description = description;
 		this.openIssue = openIssue;
-		this.workitem = workitem;
+		this.workItem = workitem;
 	}
 
 	public String getDescription() {
@@ -33,10 +33,14 @@ public class Issue extends AbstractEntity {
 		return openIssue;
 	}
 
+	public WorkItem getWorkitem() {
+		return workItem;
+	}
+
 	@Override
 	public String toString() {
 		return "Issue " + getId() + ", description: " + description + ", is open: " + openIssue + ", workitem id: "
-				+ workitem;
+				+ workItem;
 	}
 
 }
