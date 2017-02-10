@@ -24,11 +24,11 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 	
-    @MockBean
-    private UserRepository userRepository;
+	@MockBean
+	private UserRepository userRepository;
     
-    @MockBean
-    private User user;
+	@MockBean
+	private User user;
 
 	@Test
 	public void canGetUserByUserId() {
