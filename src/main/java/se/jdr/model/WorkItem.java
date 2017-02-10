@@ -1,13 +1,12 @@
 package se.jdr.model;
 
-import java.util.Collection;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,8 +22,8 @@ public class WorkItem extends AbstractEntity {
 	@ManyToOne
 	private User user;
 	private String dateOfCompletion;
-	@OneToMany(mappedBy = "workItem")
-	private Collection<Issue> issues;
+	@OneToOne(cascade = CascadeType.REMOVE)
+	private Issue issue;
 
 	protected WorkItem() {
 	}
@@ -51,6 +50,10 @@ public class WorkItem extends AbstractEntity {
 		return user;
 	}
 
+	public Issue getIssue() {
+		return issue;
+	}
+
 	public String getDateOfCompletion() {
 		return dateOfCompletion;
 	}
@@ -59,8 +62,8 @@ public class WorkItem extends AbstractEntity {
 		this.user = user;
 	}
 
-	public void setIssues(Collection<Issue> issues) {
-		this.issues = issues;
+	public void setIssue(Issue issue) {
+		this.issue = issue;
 	}
 
 	public void setDateOfCompletion(String dateOfCompletion) {

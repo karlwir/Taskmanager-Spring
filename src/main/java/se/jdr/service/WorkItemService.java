@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
+import se.jdr.model.WorkItem.Status;
+import se.jdr.repository.IssueRepository;
 import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
 
@@ -15,11 +17,14 @@ public final class WorkItemService {
 
 	private final WorkItemRepository workItemRepository;
 	private final UserRepository userRepository;
+	private final IssueRepository issueRepository;
 
 	@Autowired
-	public WorkItemService(WorkItemRepository workItemRepository, UserRepository userRepository) {
+	public WorkItemService(WorkItemRepository workItemRepository, UserRepository userRepository,
+			IssueRepository issueRepository) {
 		this.workItemRepository = workItemRepository;
 		this.userRepository = userRepository;
+		this.issueRepository = issueRepository;
 	}
 
 	public WorkItem addOrUpdateWorkItem(WorkItem workItem) {
@@ -32,7 +37,13 @@ public final class WorkItemService {
 	}
 
 	public void removeWorkItem(WorkItem workItem) {
-		workItemRepository.delete(workItem);
+		// workItemRepository.delete(workItem);
+		updateWorkItemStatus(workItem, Status.ARCHIVED);
+		workItem.setIssue(null);
+		addOrUpdateWorkItem(workItem);
+		// Issue issue = workItem.getIssue();
+		// issue.setOpenIssue(false);
+		// issueRepository.save(issue);
 	}
 
 	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {

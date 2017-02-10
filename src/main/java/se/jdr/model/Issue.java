@@ -2,7 +2,8 @@ package se.jdr.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,7 +14,8 @@ public class Issue extends AbstractEntity {
 	private String description;
 	@Column(nullable = false)
 	private boolean openIssue;
-	@ManyToOne
+	@OneToOne
+	@JoinColumn(name = "id")
 	private WorkItem workItem;
 
 	protected Issue() {

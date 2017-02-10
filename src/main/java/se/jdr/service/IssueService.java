@@ -24,8 +24,9 @@ public final class IssueService {
 	public Issue addIssue(WorkItem workItem, String description) throws ServiceException {
 		if (workItem.getStatus() == Status.DONE) {
 			workItem.setStatus(Status.UNSTARTED);
+			workItem.setIssue(addOrUpdate(new Issue(workItem, description)));
 			workItemRepository.save(workItem);
-			return addOrUpdate(new Issue(workItem, description));
+			return workItem.getIssue();
 		} else {
 			throw new ServiceException("Invalid work item status");
 		}
