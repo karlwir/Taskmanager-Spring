@@ -21,6 +21,7 @@ import se.jdr.repository.UserRepository;
 import se.jdr.service.ServiceException;
 import se.jdr.service.UserService;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,16 +30,19 @@ public class TaskmanagerSpringApplicationTests {
 
 	@Autowired
 	UserService userService;
-	
+
 	@MockBean
 	UserRepository userRepository;
-	
+
 	@MockBean
 	User user;
 
 	@Test
 	public void contextLoads() throws ServiceException {
-		given(userService.addOrUpdateUser(user)).willReturn(user);
+		when(userService.getUserByUserId("15")).thenReturn(user);
+		User userfromDb = userService.getUserByUserId("15");
+		System.out.println(user);
+		assertThat(userfromDb, is(user));
 
 	}
 
