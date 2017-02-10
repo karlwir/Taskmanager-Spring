@@ -19,9 +19,9 @@ public class Issue extends AbstractEntity {
 	protected Issue() {
 	}
 
-	public Issue(WorkItem workitem, String description, boolean openIssue) {
+	public Issue(WorkItem workitem, String description) {
 		this.description = description;
-		this.openIssue = openIssue;
+		this.openIssue = true;
 		this.workItem = workitem;
 	}
 
@@ -35,6 +35,14 @@ public class Issue extends AbstractEntity {
 
 	public WorkItem getWorkitem() {
 		return workItem;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setOpenIssue(boolean openIssue) {
+		this.openIssue = openIssue;
 	}
 
 	@Override
