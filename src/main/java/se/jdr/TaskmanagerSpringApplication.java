@@ -10,6 +10,7 @@ import se.jdr.model.Team;
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
+import se.jdr.repository.WorkItemRepository;
 import se.jdr.service.IssueService;
 import se.jdr.service.TeamService;
 import se.jdr.service.UserService;
@@ -29,16 +30,16 @@ public class TaskmanagerSpringApplication {
 			TeamService teamService = context.getBean(TeamService.class);
 			IssueService issueService = context.getBean(IssueService.class);
 			WorkItemService workItemService = context.getBean(WorkItemService.class);
+			WorkItemRepository workItemRepository = context.getBean(WorkItemRepository.class);
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
 			User user2 = userService.addOrUpdateUser(new User("danne101010101", "Daniel", "kemter", "15", true));
-			// User user3 = userService.addOrUpdateUser(new User("danneE",
-			// "Daniel", "kemter", "199", true));
+			User user3 = userService.getUserByUserId(user2.getUserId());
 
 			Team team = teamService.addOrUpdateTeam(new Team("teammmmmmmmmmmm", true));
+			teamService.addUserToTeam(user3, team);
 			// teamService.addUserToTeam(user, team);
-			teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 
 			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
@@ -46,20 +47,25 @@ public class TaskmanagerSpringApplication {
 			WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
 			workItemService.updateWorkItemStatus(workItem, Status.DONE);
 			//
-			// issueService.addIssue(workItem, "description");
+			issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
 			//
 			// System.out.println();
-			// workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
+			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
 			// //
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
-			userService.updateUserStatus(user2, false);
+			// userService.updateUserStatus(user2, false);
 			//
-			workItemService.addUserToWorkItem(workItem, user2);
-			workItemService.addUserToWorkItem(workItem2, user2);
-			workItemService.addUserToWorkItem(workItem3, user2);
-			System.out.println(userService.getUserByUserId("15"));
+			workItemService.addUserToWorkItem(workItem, user3);
+			workItemService.updateWorkItemStatus(workItem2, Status.ARCHIVED);
+			workItemService.addUserToWorkItem(workItem2, user3);
+			workItemService.addUserToWorkItem(workItem3, user3);
+			// System.out.println(userService.getUserByUserId("15"));
+			workItemService.getAllWorkItemsByTeam(team.getId());
+			workItemService.getAllWorkItemsByUser(user3).forEach(System.out::println);
+			workItemService.getWorkItemByDescripton(workItem.getDescription()).forEach(System.out::println);
+			System.out.println(workItemRepository.countByUserId(user3.getId()));
 			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
 			// user);
 			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
