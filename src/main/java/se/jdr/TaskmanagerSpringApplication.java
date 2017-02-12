@@ -49,36 +49,20 @@ public class TaskmanagerSpringApplication {
 			//
 			issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
-			//
 			// System.out.println();
 			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
-			// //
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
 			// userService.updateUserStatus(user2, false);
-			//
+
 			workItemService.addUserToWorkItem(workItem, user3);
 			workItemService.updateWorkItemStatus(workItem2, Status.ARCHIVED);
 			workItemService.addUserToWorkItem(workItem2, user3);
 			workItemService.addUserToWorkItem(workItem3, user3);
-			// System.out.println(userService.getUserByUserId("15"));
 			workItemService.getAllWorkItemsByTeam(team.getId());
 			workItemService.getAllWorkItemsByUser(user3).forEach(System.out::println);
 			workItemService.getWorkItemByDescripton(workItem.getDescription()).forEach(System.out::println);
 			System.out.println(workItemRepository.countByUserId(user3.getId()));
-			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
-			// user);
-			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
-			// user2);
-			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
-			// user);
-
-			// workItemService.getAllWorkItemsByUser(user.getId()).forEach(System.out::println);
-
-			// workItemService.getWorkItemByDescripton("item2").forEach(System.out::println);
-
-			// workItemService.getAllWorkItemsByTeam(team.getId()).forEach(System.out::println);
-			;
 		};
 	}
 }
