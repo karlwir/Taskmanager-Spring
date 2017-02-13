@@ -44,4 +44,8 @@ public final class IssueService {
 		issue.setOpenIssue(status);
 		return addOrUpdate(issue);
 	}
+
+	// public Collection<Issue> getByWorkItemId(Long id) {
+	// return issuerepository.findByWorkItemId(id);
+	// }
 }

@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import se.jdr.model.Team;
-import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.service.IssueService;
@@ -32,19 +30,33 @@ public class TaskmanagerSpringApplication {
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
-			User user2 = userService.addOrUpdateUser(new User("danne101010101", "Daniel", "kemter", "15", true));
+			// User user2 = userService.addOrUpdateUser(new
+			// User("danne101010101", "Daniel", "kemter", "15", true));
 			// User user3 = userService.addOrUpdateUser(new User("danneE",
 			// "Daniel", "kemter", "199", true));
 
-			Team team = teamService.addOrUpdateTeam(new Team("teammmmmmmmmmmm", true));
+			// Team team = teamService.addOrUpdateTeam(new
+			// Team("teammmmmmmmmmmm", true));
 			// teamService.addUserToTeam(user, team);
-			teamService.addUserToTeam(user2, team);
+			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 
 			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			workItemService.updateWorkItemStatus(workItem, Status.DONE);
+			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
+			issueService.addIssue(workItem, "something");
+
+			// Collection<Issue> issues =
+			// issueService.getByWorkItemId(workItem.getId());
+
+			// issues.forEach(System.out::println);
+
+			// WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new
+			// WorkItem("work", "item"));
+			// WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new
+			// WorkItem("work", "item"));
+
+			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
+
 			//
 			// issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
@@ -54,12 +66,12 @@ public class TaskmanagerSpringApplication {
 			// //
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
-			userService.updateUserStatus(user2, false);
+			// userService.updateUserStatus(user2, false);
 			//
-			workItemService.addUserToWorkItem(workItem, user2);
-			workItemService.addUserToWorkItem(workItem2, user2);
-			workItemService.addUserToWorkItem(workItem3, user2);
-			System.out.println(userService.getUserByUserId("15"));
+			// workItemService.addUserToWorkItem(workItem, user2);
+			// workItemService.addUserToWorkItem(workItem2, user2);
+			// workItemService.addUserToWorkItem(workItem3, user2);
+			// System.out.println(userService.getUserByUserId("15"));
 			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
 			// user);
 			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
