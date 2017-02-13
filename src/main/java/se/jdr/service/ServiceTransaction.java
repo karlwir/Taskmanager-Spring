@@ -1,5 +1,7 @@
 package se.jdr.service;
 
+import java.util.function.Supplier;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
@@ -8,12 +10,7 @@ import org.springframework.stereotype.Component;
 public class ServiceTransaction {
 
 	@Transactional
-	public <T> T execute(Action<T> action) {
-		return action.execute();
-	}
-
-	@FunctionalInterface
-	public static interface Action<T> {
-		T execute();
+	public <T> T execute(Supplier<T> action) {
+		return action.get();
 	}
 }
