@@ -29,11 +29,11 @@ public class UserRepositoryTest {
     @MockBean
     UserRepository userRepository;
 
-    String userName = "Robbe";
-    String firstName = "Robert";
-    String lastName = "Savela";
-    String userid = "15";
-    User user = new User(userName, firstName, lastName, userid, true);
+    private String userName = "Robbe";
+    private String firstName = "Robert";
+    private String lastName = "Savela";
+    private String userid = "15";
+    private User user = new User(userName, firstName, lastName, userid, true);
 
     @Test
     public void canGetUser() throws ServiceException {
