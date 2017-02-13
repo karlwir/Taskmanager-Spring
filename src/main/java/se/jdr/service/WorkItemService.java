@@ -5,9 +5,11 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import se.jdr.model.Issue;
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
+import se.jdr.repository.IssueRepository;
 import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
 
@@ -16,11 +18,16 @@ public final class WorkItemService {
 
 	private final WorkItemRepository workItemRepository;
 	private final UserRepository userRepository;
+	private final IssueRepository issueRepository;
+	private final ServiceTransaction transaction;
 
 	@Autowired
-	public WorkItemService(WorkItemRepository workItemRepository, UserRepository userRepository) {
+	public WorkItemService(WorkItemRepository workItemRepository, UserRepository userRepository,
+			IssueRepository issueRepository, ServiceTransaction transaction) {
 		this.workItemRepository = workItemRepository;
 		this.userRepository = userRepository;
+		this.issueRepository = issueRepository;
+		this.transaction = transaction;
 	}
 
 	public WorkItem addOrUpdateWorkItem(WorkItem workItem) {
@@ -28,12 +35,21 @@ public final class WorkItemService {
 	}
 
 	public WorkItem updateWorkItemStatus(WorkItem workItem, WorkItem.Status status) {
-		workItem.setStatus(status);
-		return addOrUpdateWorkItem(workItem);
-	}
+		if (status == Status.ARCHIVED) {
+			return transaction.execute(() -> {
+				Collection<Issue> issues = issueRepository.findByWorkItemId(workItem.getId());
+				issues.forEach(i -> i.setOpenIssue(false));
 
-	public void removeWorkItem(WorkItem workItem) {
-		workItemRepository.delete(workItem);
+				issueRepository.save(issues);
+				workItem.setStatus(status);
+
+				return workItemRepository.save(workItem);
+			});
+
+		} else {
+			workItem.setStatus(status);
+			return addOrUpdateWorkItem(workItem);
+		}
 	}
 
 	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {

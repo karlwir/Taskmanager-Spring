@@ -14,18 +14,23 @@ public final class IssueService {
 
 	private final IssueRepository issuerepository;
 	private final WorkItemRepository workItemRepository;
+	private final ServiceTransaction transaction;
 
 	@Autowired
-	public IssueService(IssueRepository issueRepository, WorkItemRepository workItemRepository) {
+	public IssueService(IssueRepository issueRepository, WorkItemRepository workItemRepository,
+			ServiceTransaction transaction) {
 		this.issuerepository = issueRepository;
 		this.workItemRepository = workItemRepository;
+		this.transaction = transaction;
 	}
 
 	public Issue addIssue(WorkItem workItem, String description) throws ServiceException {
 		if (workItem.getStatus() == Status.DONE) {
-			workItem.setStatus(Status.UNSTARTED);
-			workItemRepository.save(workItem);
-			return addOrUpdate(new Issue(workItem, description));
+			return transaction.execute(() -> {
+				workItem.setStatus(Status.UNSTARTED);
+				workItemRepository.save(workItem);
+				return addOrUpdate(new Issue(workItem, description));
+			});
 		} else {
 			throw new ServiceException("Invalid work item status");
 		}
