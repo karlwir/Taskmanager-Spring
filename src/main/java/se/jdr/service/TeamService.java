@@ -40,15 +40,18 @@ public final class TeamService {
 	}
 
 	public void addUserToTeam(User user, Team team) throws ServiceException {
-		Team teamToDB = teamRepository.save(team);
-		Long numberOfUsers = userRepository.countByTeamId(teamToDB.getId());
+		Team teamToDB = addOrUpdateTeam(team);
 
-		if (numberOfUsers < 10) {
+		if (isValidTeamSize(teamToDB)) {
 			user.setTeam(teamToDB);
 			userRepository.save(user);
 		} else {
 			throw new ServiceException("Team is full!");
 		}
+	}
+
+	public boolean isValidTeamSize(Team team) {
+		return userRepository.countByTeamId(team.getId()) < 10;
 	}
 
 }
