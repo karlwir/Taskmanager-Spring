@@ -54,7 +54,7 @@ public final class WorkItemService {
 
 	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
 		User userToDB = userRepository.save(user);
-		if (userToDB.isActiveUser() && workItemRepository.countByUserId(user.getId()) < 5) {
+		if (userToDB.isActiveUser() && workItemRepository.countByUserId(user.getId()) < 2) {
 			workItem.setUser(userToDB);
 			addOrUpdateWorkItem(workItem);
 		} else {
@@ -70,8 +70,8 @@ public final class WorkItemService {
 		return workItemRepository.getWorkItemsByTeamId(teamId);
 	}
 
-	public Collection<WorkItem> getAllWorkItemsByUser(Long userId) {
-		return workItemRepository.findByUserId(userId);
+	public Collection<WorkItem> getAllWorkItemsByUser(User user) {
+		return workItemRepository.findByUserId(user.getId());
 	}
 
 	public Collection<WorkItem> getAllWorkItemsWithIssues() {
@@ -79,7 +79,7 @@ public final class WorkItemService {
 	}
 
 	public Collection<WorkItem> getWorkItemByDescripton(String description) {
-		return workItemRepository.findByDescriptionLike(description);
+		return workItemRepository.findByDescription(description);
 	}
 
 }

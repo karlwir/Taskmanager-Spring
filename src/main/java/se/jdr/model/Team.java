@@ -38,6 +38,10 @@ public class Team extends AbstractEntity {
 		return teamName;
 	}
 
+	public Collection<User> getUsers() {
+		return users;
+	}
+
 	public boolean isActiveTeam() {
 		return activeTeam;
 	}

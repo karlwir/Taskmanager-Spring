@@ -62,6 +62,10 @@ public class User extends AbstractEntity {
 		return team;
 	}
 
+	public String getUserId() {
+		return userId;
+	}
+
 	public void setActiveUser(boolean activeUser) {
 		this.activeUser = activeUser;
 	}

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
+import se.jdr.repository.WorkItemRepository;
 import se.jdr.service.IssueService;
 import se.jdr.service.TeamService;
 import se.jdr.service.UserService;
@@ -27,6 +28,7 @@ public class TaskmanagerSpringApplication {
 			TeamService teamService = context.getBean(TeamService.class);
 			IssueService issueService = context.getBean(IssueService.class);
 			WorkItemService workItemService = context.getBean(WorkItemService.class);
+			WorkItemRepository workItemRepository = context.getBean(WorkItemRepository.class);
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
@@ -60,12 +62,10 @@ public class TaskmanagerSpringApplication {
 			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
 
 			//
-			// issueService.addIssue(workItem, "description");
+			issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
-			//
 			// System.out.println();
-			// workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
-			// //
+			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
 			// userService.updateUserStatus(user2, false);
@@ -85,8 +85,6 @@ public class TaskmanagerSpringApplication {
 
 			// workItemService.getWorkItemByDescripton("item2").forEach(System.out::println);
 
-			// workItemService.getAllWorkItemsByTeam(team.getId()).forEach(System.out::println);
-			;
 		};
 	}
 }
