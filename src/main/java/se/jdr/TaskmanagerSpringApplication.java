@@ -44,6 +44,8 @@ public class TaskmanagerSpringApplication {
 			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
 			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
 			issueService.addIssue(workItem, "something");
+			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
+			issueService.addIssue(workItem, "something else");
 
 			// Collection<Issue> issues =
 			// issueService.getByWorkItemId(workItem.getId());
