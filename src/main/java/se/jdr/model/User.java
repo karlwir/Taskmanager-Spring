@@ -54,6 +54,14 @@ public class User extends AbstractEntity {
 		this.username = username;
 	}
 
+	public void setFirstName(String firstName) {
+		this.firstname = firstName;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
 	public boolean isActiveUser() {
 		return activeUser;
 	}
@@ -77,7 +85,7 @@ public class User extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "User " + getId() + ", username: " + username + ", firstname: " + firstname + ", lastname: " + lastname
-				+ "userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
+				+ ", userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
 	}
 
 }
