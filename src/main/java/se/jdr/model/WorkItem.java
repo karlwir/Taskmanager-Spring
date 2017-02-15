@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,7 +23,7 @@ public class WorkItem extends AbstractEntity {
 	@ManyToOne
 	private User user;
 	private String dateOfCompletion;
-	@OneToMany(mappedBy = "workItem", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "workItem")
 	private Collection<Issue> issues;
 
 	protected WorkItem() {
