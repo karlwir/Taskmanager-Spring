@@ -7,10 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import se.jdr.model.WorkItem;
-import se.jdr.model.WorkItem.Status;
 
 public interface WorkItemRepository extends CrudRepository<WorkItem, Long> {
-	
+
 	public Collection<WorkItem> findByStatus(WorkItem.Status status);
 
 	@Query("select wi FROM #{#entityName} wi JOIN wi.user u JOIN u.team t WHERE t.id = :teamId and wi.status != 'ARCHIVED'")

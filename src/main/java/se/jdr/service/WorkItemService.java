@@ -10,22 +10,21 @@ import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.IssueRepository;
-import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
 
 @Component
 public final class WorkItemService {
 
 	private final WorkItemRepository workItemRepository;
-	private final UserRepository userRepository;
+	private final UserService userService;
 	private final IssueRepository issueRepository;
 	private final ServiceTransaction transaction;
 
 	@Autowired
-	public WorkItemService(WorkItemRepository workItemRepository, UserRepository userRepository,
+	public WorkItemService(WorkItemRepository workItemRepository, UserService userService,
 			IssueRepository issueRepository, ServiceTransaction transaction) {
 		this.workItemRepository = workItemRepository;
-		this.userRepository = userRepository;
+		this.userService = userService;
 		this.issueRepository = issueRepository;
 		this.transaction = transaction;
 	}
@@ -53,8 +52,8 @@ public final class WorkItemService {
 	}
 
 	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
-		User userToDB = userRepository.save(user);
-		if (userToDB.isActiveUser() && workItemRepository.countByUserId(user.getId()) < 2) {
+		User userToDB = userService.addOrUpdateUser(user);
+		if (userToDB.isActiveUser() && isValidAmountOfWorkItems(userToDB)) {
 			workItem.setUser(userToDB);
 			addOrUpdateWorkItem(workItem);
 		} else {
@@ -80,6 +79,10 @@ public final class WorkItemService {
 
 	public Collection<WorkItem> getWorkItemByDescripton(String description) {
 		return workItemRepository.findByDescription(description);
+	}
+
+	private boolean isValidAmountOfWorkItems(User user) {
+		return workItemRepository.countByUserId(user.getId()) < 5;
 	}
 
 }

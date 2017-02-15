@@ -50,7 +50,7 @@ public final class TeamService {
 		}
 	}
 
-	public boolean isValidTeamSize(Team team) {
+	private boolean isValidTeamSize(Team team) {
 		return userRepository.countByTeamId(team.getId()) < 10;
 	}
 

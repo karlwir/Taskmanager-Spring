@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.WorkItemRepository;
@@ -32,8 +33,7 @@ public class TaskmanagerSpringApplication {
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
-			// User user2 = userService.addOrUpdateUser(new
-			// User("danne101010101", "Daniel", "kemter", "15", true));
+			User user2 = userService.addOrUpdateUser(new User("danne101010101", "Daniel", "kemter", "15", true));
 			// User user3 = userService.addOrUpdateUser(new User("danneE",
 			// "Daniel", "kemter", "199", true));
 
@@ -49,6 +49,7 @@ public class TaskmanagerSpringApplication {
 			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
 			issueService.addIssue(workItem, "something else");
 
+			workItemService.addUserToWorkItem(workItem, user2);
 			// Collection<Issue> issues =
 			// issueService.getByWorkItemId(workItem.getId());
 
@@ -62,7 +63,7 @@ public class TaskmanagerSpringApplication {
 			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
 
 			//
-			issueService.addIssue(workItem, "description");
+			// issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
 			// System.out.println();
 			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
@@ -70,7 +71,6 @@ public class TaskmanagerSpringApplication {
 			// teamService.addUserToTeam(user2, team);
 			// userService.updateUserStatus(user2, false);
 			//
-			// workItemService.addUserToWorkItem(workItem, user2);
 			// workItemService.addUserToWorkItem(workItem2, user2);
 			// workItemService.addUserToWorkItem(workItem3, user2);
 			// System.out.println(userService.getUserByUserId("15"));
