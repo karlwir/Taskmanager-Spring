@@ -34,6 +34,16 @@ public final class UserService {
 		user.setUsername(username);
 		return addOrUpdateUser(user);
 	}
+	
+	public User updateFirstName(User user, String firstname) throws ServiceException {
+		user.setFirstName(firstname);
+		return addOrUpdateUser(user);
+	}
+	
+	public User updateLastName(User user, String lastname) throws ServiceException {
+		user.setLastname(lastname);
+		return addOrUpdateUser(user);
+	}
 
 	public User updateUserStatus(User user, boolean status) throws ServiceException {
 		user.setActiveUser(status);
