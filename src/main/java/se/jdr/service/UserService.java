@@ -1,11 +1,14 @@
 package se.jdr.service;
 
+
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.jdr.model.User;
+import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
@@ -15,11 +18,14 @@ public final class UserService {
 
 	private final UserRepository userRepository;
 	private final WorkItemRepository workItemRepository;
+	private final ServiceTransaction transaction;
 
 	@Autowired
-	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository) {
+	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository,
+					   ServiceTransaction transaction) {
 		this.userRepository = userRepository;
 		this.workItemRepository = workItemRepository;
+		this.transaction = transaction;
 	}
 
 	public User addOrUpdateUser(User user) throws ServiceException {
@@ -48,12 +54,16 @@ public final class UserService {
 	public User updateUserStatus(User user, boolean status) throws ServiceException {
 		user.setActiveUser(status);
 		if (user.isActiveUser() == false) {
-			workItemRepository.findByUserId(user.getId()).forEach(wi -> {
-				wi.setStatus(Status.UNSTARTED);
-				workItemRepository.save(wi);
+			return transaction.execute(() -> {
+				workItemRepository.findByUserId(user.getId()).forEach(workItem -> {
+					workItem.setStatus(Status.UNSTARTED);
+					workItemRepository.save(workItem);
+				});
+				return addOrUpdateUser(user);
 			});
 		}
 		return addOrUpdateUser(user);
+
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) {

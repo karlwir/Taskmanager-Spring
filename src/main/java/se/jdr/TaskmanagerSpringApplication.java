@@ -32,9 +32,9 @@ public class TaskmanagerSpringApplication {
 			WorkItemRepository workItemRepository = context.getBean(WorkItemRepository.class);
 
 
-			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
-			// "1333333333333333333333", true));
-			// "Daniel", "kemter", "199", true));
+			User user = userService.addOrUpdateUser(new User("joatsfsdasdas", "joakim", "holmgren",
+			 "1333333333333333333333", true));
+			User user2 = userService.addOrUpdateUser(new User( "Danielasdadasdasd", "kemter", "199", "e15", true));
 
 			// Team team = teamService.addOrUpdateTeam(new
 			// Team("teammmmmmmmmmmm", true));
@@ -54,10 +54,10 @@ public class TaskmanagerSpringApplication {
 
 			// issues.forEach(System.out::println);
 
-			// WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new
-			// WorkItem("work", "item"));
-			// WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new
-			// WorkItem("work", "item"));
+			 WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new
+			 WorkItem("work", "item"));
+			 WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new
+			 WorkItem("work", "item"));
 
 //			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
 
@@ -68,17 +68,17 @@ public class TaskmanagerSpringApplication {
 //			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
-			// userService.updateUserStatus(user2, false);
-			//
-			// workItemService.addUserToWorkItem(workItem2, user2);
-			// workItemService.addUserToWorkItem(workItem3, user2);
-			// System.out.println(userService.getUserByUserId("15"));
-			// workItemService.addUserToWorkItem(new WorkItem("work", "item"),
-			// user);
-			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
-			// user2);
-			// workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
-			// user);
+			 workItemService.addUserToWorkItem(workItem2, user2);
+			workItemService.addUserToWorkItem(workItem3, user2);
+			System.out.println(userService.getUserByUserId("15"));
+			workItemService.addUserToWorkItem(new WorkItem("work", "item"),
+			 user);
+			workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
+			 user2);
+			workItemService.addUserToWorkItem(new WorkItem("work2", "item2"),
+			 user);
+
+			 userService.updateUserStatus(user2, false);
 
 			// workItemService.getAllWorkItemsByUser(user.getId()).forEach(System.out::println);
 

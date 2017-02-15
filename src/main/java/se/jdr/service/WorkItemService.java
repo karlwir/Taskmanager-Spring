@@ -33,7 +33,7 @@ public final class WorkItemService {
 		return workItemRepository.save(workItem);
 	}
 
-	public WorkItem updateWorkItemStatus(WorkItem workItem, WorkItem.Status status) {
+	public WorkItem updateWorkItemStatus(WorkItem workItem, WorkItem.Status status) throws ServiceException {
 		if (status == Status.ARCHIVED) {
 			return transaction.execute(() -> {
 				Collection<Issue> issues = issueRepository.findByWorkItemId(workItem.getId());
