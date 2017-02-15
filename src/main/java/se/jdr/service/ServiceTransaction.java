@@ -5,12 +5,13 @@ import java.util.function.Supplier;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
+import se.jdr.model.AbstractEntity;
 
 @Component
 public class ServiceTransaction {
 
 	@Transactional
-	public <T> T execute(Supplier<T> action) {
+	public <E extends AbstractEntity> E execute(Supplier<E> action) {
 		return action.get();
 	}
 }

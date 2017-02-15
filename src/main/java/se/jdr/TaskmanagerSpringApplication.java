@@ -30,7 +30,7 @@ public class TaskmanagerSpringApplication {
 			IssueService issueService = context.getBean(IssueService.class);
 			WorkItemService workItemService = context.getBean(WorkItemService.class);
 			WorkItemRepository workItemRepository = context.getBean(WorkItemRepository.class);
-			
+
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
