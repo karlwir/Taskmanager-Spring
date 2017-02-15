@@ -10,14 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+
+import se.jdr.AbstractTest;
 import se.jdr.config.TestConfig;
 import se.jdr.model.User;
 import se.jdr.repository.UserRepository;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
-public class UserServiceTest {
+public class UserServiceTest extends AbstractTest {
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();

@@ -33,7 +33,7 @@ public class TaskmanagerSpringApplication {
 
 			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
 			// "1333333333333333333333", true));
-			User user2 = userService.addOrUpdateUser(new User("danne101010101", "Daniel", "kemter", "15", true));
+			User user2 = userService.addOrUpdateUser(new User("danne101012340101", "Daniel", "kemter", "153w", true));
 			// User user3 = userService.addOrUpdateUser(new User("danneE",
 			// "Daniel", "kemter", "199", true));
 
@@ -43,13 +43,13 @@ public class TaskmanagerSpringApplication {
 			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 
-			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
-			issueService.addIssue(workItem, "something");
-			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
-			issueService.addIssue(workItem, "something else");
-
-			workItemService.addUserToWorkItem(workItem, user2);
+//			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+//			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
+//			issueService.addIssue(workItem, "something");
+//			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
+//			issueService.addIssue(workItem, "something else");
+//
+//			workItemService.addUserToWorkItem(workItem, user2);
 			// Collection<Issue> issues =
 			// issueService.getByWorkItemId(workItem.getId());
 
@@ -60,13 +60,13 @@ public class TaskmanagerSpringApplication {
 			// WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new
 			// WorkItem("work", "item"));
 
-			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
+//			workItemService.updateWorkItemStatus(workItem, Status.ARCHIVED);
 
 			//
 			// issueService.addIssue(workItem, "description");
 			// issueService.addIssue(workItem, "description2");
 			// System.out.println();
-			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
+//			workItemService.getAllWorkItemsWithIssues().forEach(System.out::println);
 			// teamService.addUserToTeam(user, team);
 			// teamService.addUserToTeam(user2, team);
 			// userService.updateUserStatus(user2, false);

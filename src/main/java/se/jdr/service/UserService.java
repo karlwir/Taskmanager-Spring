@@ -11,7 +11,7 @@ import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
 
 @Component
-public final class UserService {
+public class UserService {
 
 	private final UserRepository userRepository;
 	private final WorkItemRepository workItemRepository;

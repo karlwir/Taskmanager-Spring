@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+
+import se.jdr.AbstractTest;
 import se.jdr.config.TestConfig;
 import se.jdr.model.Team;
 import se.jdr.model.User;
@@ -21,10 +23,7 @@ import se.jdr.repository.UserRepository;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
-public class TeamServiceTest {
+public class TeamServiceTest extends AbstractTest {
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	@Autowired

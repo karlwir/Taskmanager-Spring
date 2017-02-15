@@ -40,6 +40,7 @@ public final class WorkItemService {
 				issues.forEach(i -> i.setOpenIssue(false));
 
 				issueRepository.save(issues);
+				
 				workItem.setStatus(status);
 
 				return workItemRepository.save(workItem);
