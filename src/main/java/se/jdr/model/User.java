@@ -30,11 +30,11 @@ public class User extends AbstractEntity {
 	protected User() {
 	}
 
-	public User(String username, String firstname, String lastname, String userId, boolean activeUser) {
+	public User(String username, String firstname, String lastname, String userId) {
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.activeUser = activeUser;
+		this.activeUser = true;
 		this.userId = userId;
 	}
 

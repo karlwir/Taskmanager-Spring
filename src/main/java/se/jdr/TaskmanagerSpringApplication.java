@@ -33,8 +33,8 @@ public class TaskmanagerSpringApplication {
 
 
 			User user = userService.addOrUpdateUser(new User("joatsfsdasdas", "joakim", "holmgren",
-			 "1333333333333333333333", true));
-			User user2 = userService.addOrUpdateUser(new User( "Danielasdadasdasd", "kemter", "199", "e15", true));
+			 "1333333333333333333333"));
+			User user2 = userService.addOrUpdateUser(new User( "Danielasdadasdasd", "kemter", "199", "e15"));
 
 			// Team team = teamService.addOrUpdateTeam(new
 			// Team("teammmmmmmmmmmm", true));

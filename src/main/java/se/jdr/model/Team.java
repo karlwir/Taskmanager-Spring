@@ -21,9 +21,9 @@ public class Team extends AbstractEntity {
 	protected Team() {
 	}
 
-	public Team(String teamName, boolean activeTeam) {
+	public Team(String teamName) {
 		this.teamName = teamName;
-		this.activeTeam = activeTeam;
+		this.activeTeam = true;
 	}
 
 	public void setUsers(Collection<User> users) {
