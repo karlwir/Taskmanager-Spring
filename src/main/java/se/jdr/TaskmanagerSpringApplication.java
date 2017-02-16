@@ -7,10 +7,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import se.jdr.model.User;
+import se.jdr.model.User.UserUpdater;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.WorkItemRepository;
 import se.jdr.service.IssueService;
+import se.jdr.service.ServiceManager;
 import se.jdr.service.TeamService;
 import se.jdr.service.UserService;
 import se.jdr.service.WorkItemService;
@@ -25,17 +27,18 @@ public class TaskmanagerSpringApplication {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
+			ServiceManager serviceManager = context.getBean(ServiceManager.class);
 			UserService userService = context.getBean(UserService.class);
 			TeamService teamService = context.getBean(TeamService.class);
 			IssueService issueService = context.getBean(IssueService.class);
 			WorkItemService workItemService = context.getBean(WorkItemService.class);
-			WorkItemRepository workItemRepository = context.getBean(WorkItemRepository.class);
+			serviceManager.setIssueService(issueService);
+			serviceManager.setTeamService(teamService);
+			serviceManager.setUserService(userService);
+			serviceManager.setWorkItemService(workItemService);
 
-			// .addOrUpdateUser(new User("joats", "joakim", "holmgren",
-			// "1333333333333333333333", true));
-			User user2 = userService.addOrUpdateUser(new User("danne101012340101", "Daniel", "kemter", "153w", true));
-			// User user3 = userService.addOrUpdateUser(new User("danneE",
-			// "Daniel", "kemter", "199", true));
+			
+			User user = userService.addOrUpdateUser(new User("danne101012340198701", "Daniel", "kemter"));
 
 			// Team team = teamService.addOrUpdateTeam(new
 			// Team("teammmmmmmmmmmm", true));
@@ -43,13 +46,18 @@ public class TaskmanagerSpringApplication {
 			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 
-//			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-//			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
-//			issueService.addIssue(workItem, "something");
-//			workItem = workItemService.updateWorkItemStatus(workItem, Status.DONE);
-//			issueService.addIssue(workItem, "something else");
-//
-//			workItemService.addUserToWorkItem(workItem, user2);
+			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+			WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+			WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+			WorkItem workItem4 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+
+			workItemService.addUserToWorkItem(workItem, user);
+			workItemService.addUserToWorkItem(workItem2, user);
+			workItemService.addUserToWorkItem(workItem3, user);
+			workItemService.addUserToWorkItem(workItem4, user);
+
+			 userService.updateUserStatus(user, false);
+
 			// Collection<Issue> issues =
 			// issueService.getByWorkItemId(workItem.getId());
 

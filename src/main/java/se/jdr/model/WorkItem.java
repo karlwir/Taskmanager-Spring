@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import se.jdr.service.WorkItemService;
+
 @Entity
 @Table(name = "workitems")
 public class WorkItem extends AbstractEntity {
@@ -60,20 +62,8 @@ public class WorkItem extends AbstractEntity {
 		return issues;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public void setIssues(Collection<Issue> issues) {
-		this.issues = issues;
-	}
-
 	public void setDateOfCompletion(String dateOfCompletion) {
 		this.dateOfCompletion = dateOfCompletion;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 
 	public enum Status {
@@ -84,6 +74,32 @@ public class WorkItem extends AbstractEntity {
 	public String toString() {
 		return "Workitem " + getId() + ", title: " + title + ", description: " + description + ", status: " + status
 				+ ", assignedUserId: " + user + ", dateOfCompletion: " + dateOfCompletion;
+	}
+
+	public WorkItemUpdater getUpdater(WorkItemService workItemService) {
+		return new WorkItemUpdater(this, workItemService);
+	}
+	
+	public class WorkItemUpdater {
+		
+		private WorkItem workItem;
+		private WorkItemService workItemService;
+		
+		private WorkItemUpdater(WorkItem workitem, WorkItemService workItemService) {
+			this.workItem = workitem;
+			this.workItemService = workItemService;
+		}
+
+		public WorkItem setStatus(Status status) {
+			workItem.status = status;
+			return workItemService.addOrUpdateWorkItem(workItem);
+		}
+
+		public WorkItem setUser(User user) {
+			workItem.user = user;
+			return workItemService.addOrUpdateWorkItem(workItem);
+		}
+		
 	}
 
 }

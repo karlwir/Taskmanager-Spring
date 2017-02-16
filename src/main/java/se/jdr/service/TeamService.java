@@ -1,8 +1,6 @@
 package se.jdr.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,18 +8,17 @@ import org.springframework.stereotype.Component;
 import se.jdr.model.Team;
 import se.jdr.model.User;
 import se.jdr.repository.TeamRepository;
-import se.jdr.repository.UserRepository;
 
 @Component
 public final class TeamService {
 
 	private final TeamRepository teamRepository;
-	private final UserRepository userRepository;
+	private final ServiceManager serviceManager;
 
 	@Autowired
-	public TeamService(TeamRepository teamRepository, UserRepository userRepository) {
+	public TeamService(TeamRepository teamRepository, ServiceManager serviceManager) {
 		this.teamRepository = teamRepository;
-		this.userRepository = userRepository;
+		this.serviceManager = serviceManager;
 	}
 
 	public Team addOrUpdateTeam(Team team) {
@@ -29,29 +26,28 @@ public final class TeamService {
 	}
 
 	public Team updateTeamStatus(Team team, boolean status) {
-		team.setActiveTeam(status);
-		return addOrUpdateTeam(team);
+		return team.getUpdater(this).setActiveTeam(status);
+	}
+	
+	public Team updateTeamName(Team team, String teamName) {
+		return team.getUpdater(this).setTeamName(teamName);
 	}
 
 	public Collection<Team> getAllTeams() {
-		List<Team> teams = new ArrayList<>();
-		teamRepository.findAll().forEach(t -> teams.add(t));
-		return teams;
+		return (Collection<Team>) teamRepository.findAll();
 	}
 
-	public void addUserToTeam(User user, Team team) throws ServiceException {
-		Team teamToDB = addOrUpdateTeam(team);
-
-		if (isValidTeamSize(teamToDB)) {
-			user.setTeam(teamToDB);
-			userRepository.save(user);
+	public Team addUserToTeam(User user, Team team) throws ServiceException {
+		if (isValidTeamSize(team)) {
+			user.getUpdater(serviceManager.getUserService()).setTeam(team);
+			return team;
 		} else {
 			throw new ServiceException("Team is full!");
 		}
 	}
 
 	private boolean isValidTeamSize(Team team) {
-		return userRepository.countByTeamId(team.getId()) < 10;
+		return serviceManager.getUserService().getUsersByTeamId(team.getId()).size() < 10;
 	}
 
 }

@@ -9,23 +9,19 @@ import se.jdr.model.Issue;
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
-import se.jdr.repository.IssueRepository;
 import se.jdr.repository.WorkItemRepository;
 
 @Component
 public final class WorkItemService {
 
 	private final WorkItemRepository workItemRepository;
-	private final UserService userService;
-	private final IssueRepository issueRepository;
 	private final ServiceTransaction transaction;
+	private final ServiceManager serviceManager;
 
 	@Autowired
-	public WorkItemService(WorkItemRepository workItemRepository, UserService userService,
-			IssueRepository issueRepository, ServiceTransaction transaction) {
+	public WorkItemService(WorkItemRepository workItemRepository, ServiceManager serviceManager, ServiceTransaction transaction) {
 		this.workItemRepository = workItemRepository;
-		this.userService = userService;
-		this.issueRepository = issueRepository;
+		this.serviceManager = serviceManager;
 		this.transaction = transaction;
 	}
 
@@ -36,27 +32,20 @@ public final class WorkItemService {
 	public WorkItem updateWorkItemStatus(WorkItem workItem, WorkItem.Status status) {
 		if (status == Status.ARCHIVED) {
 			return transaction.execute(() -> {
-				Collection<Issue> issues = issueRepository.findByWorkItemId(workItem.getId());
-				issues.forEach(i -> i.setOpenIssue(false));
-
-				issueRepository.save(issues);
-				
-				workItem.setStatus(status);
-
-				return workItemRepository.save(workItem);
+				Collection<Issue> issues = serviceManager.getIssueService().getByWorkItem(workItem);
+				issues.forEach(i -> i.getUpdater(serviceManager.getIssueService()).setOpenIssue(false));
+				issues.forEach(i -> serviceManager.getIssueService().addOrUpdate(i));
+				return workItem.getUpdater(this).setStatus(status);
 			});
 
 		} else {
-			workItem.setStatus(status);
-			return addOrUpdateWorkItem(workItem);
+			return workItem.getUpdater(this).setStatus(status);
 		}
 	}
 
-	public void addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
-		User userToDB = userService.addOrUpdateUser(user);
-		if (userToDB.isActiveUser() && isValidAmountOfWorkItems(userToDB)) {
-			workItem.setUser(userToDB);
-			addOrUpdateWorkItem(workItem);
+	public WorkItem addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
+		if (user.isActiveUser() && isValidAmountOfWorkItems(user)) {
+			return workItem.getUpdater(this).setUser(user);
 		} else {
 			throw new ServiceException("user must be active and cannot have more than 5 work items");
 		}

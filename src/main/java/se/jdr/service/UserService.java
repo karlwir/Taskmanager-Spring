@@ -8,42 +8,52 @@ import org.springframework.stereotype.Component;
 import se.jdr.model.User;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.UserRepository;
-import se.jdr.repository.WorkItemRepository;
 
 @Component
 public class UserService {
 
 	private final UserRepository userRepository;
-	private final WorkItemRepository workItemRepository;
+	private final ServiceManager serviceManager;
+	private final ServiceTransaction transaction;
 
 	@Autowired
-	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository) {
+	public UserService(UserRepository userRepository, ServiceManager serviceManager, ServiceTransaction transaction) {
 		this.userRepository = userRepository;
-		this.workItemRepository = workItemRepository;
+		this.serviceManager = serviceManager;
+		this.transaction = transaction;
 	}
 
-	public User addOrUpdateUser(User user) throws ServiceException {
-		if (user.getUsername().length() >= 10) {
-			return userRepository.save(user);
+	public User addOrUpdateUser(User user) {
+		return userRepository.save(user);
+	}
+	
+	public User updateFirstName(User user, String firstname) throws ServiceException {
+		return user.getUpdater(this).setFirstName(firstname);
+	}
+	
+	public User updateLastName(User user, String lastname) throws ServiceException {
+		return user.getUpdater(this).setLastName(lastname);
+	}
+
+	public User updateUsername(User user, String username) throws ServiceException {
+		if (username.length() >= 10) {
+			return user.getUpdater(this).setUsername(username);
 		} else {
 			throw new ServiceException("Username is too short!");
 		}
 	}
 
-	public User updateUsername(User user, String username) throws ServiceException {
-		user.setUsername(username);
-		return addOrUpdateUser(user);
-	}
-
 	public User updateUserStatus(User user, boolean status) throws ServiceException {
-		user.setActiveUser(status);
-		if (user.isActiveUser() == false) {
-			workItemRepository.findByUserId(user.getId()).forEach(wi -> {
-				wi.setStatus(Status.UNSTARTED);
-				workItemRepository.save(wi);
+		if (!status) {
+			return transaction.execute(() -> {
+				serviceManager.getWorkItemService().getAllWorkItemsByUser(user).forEach(wi -> {
+					wi.getUpdater(serviceManager.getWorkItemService()).setStatus(Status.UNSTARTED);
+				});
+				return user.getUpdater(this).setActiveUser(status);
 			});
+		} else {
+			return user.getUpdater(this).setActiveUser(status);				
 		}
-		return addOrUpdateUser(user);
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) {
