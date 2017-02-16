@@ -18,40 +18,31 @@ public final class UserService {
 	private final ServiceTransaction transaction;
 
 	@Autowired
-	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository,
-			ServiceTransaction transaction) {
+	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository, ServiceTransaction transaction) {
 		this.userRepository = userRepository;
 		this.workItemRepository = workItemRepository;
 		this.transaction = transaction;
 	}
 
-	private User addOrUpdateUser(User user) {
-		return userRepository.save(user);
-	}
-
-	public User addUser(String username, String firstname, String lastname, String userId) throws ServiceException {
-		if (isValidUsername(username)) {
-			return addOrUpdateUser(new User(username, firstname, lastname, userId));
+	public User addOrUpdateUser(User user) throws ServiceException {
+		if (user.getUsername().length() >= 10) {
+			return userRepository.save(user);
 		} else {
 			throw new ServiceException("Username is too short!");
 		}
 	}
 
 	public User updateUsername(User user, String username) throws ServiceException {
-		if (isValidUsername(username)) {
-			user.setUsername(username);
-			return addOrUpdateUser(user);
-		} else {
-			throw new ServiceException("Username is too short!");
-		}
+		user.setUsername(username);
+		return addOrUpdateUser(user);
 	}
 
-	public User updateFirstName(User user, String firstname) {
+	public User updateFirstName(User user, String firstname) throws ServiceException {
 		user.setFirstName(firstname);
 		return addOrUpdateUser(user);
 	}
 
-	public User updateLastName(User user, String lastname) {
+	public User updateLastName(User user, String lastname) throws ServiceException {
 		user.setLastname(lastname);
 		return addOrUpdateUser(user);
 	}
@@ -68,6 +59,7 @@ public final class UserService {
 			});
 		}
 		return addOrUpdateUser(user);
+
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) {
@@ -93,10 +85,5 @@ public final class UserService {
 	public Collection<User> getUserByUsername(String username) {
 		return userRepository.getUser("%", "%", username);
 	}
-	
-	private boolean isValidUsername(String username) {
-		return (username.length() >= 10);
-	}
-	
 
 }
