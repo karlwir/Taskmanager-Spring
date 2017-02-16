@@ -1,14 +1,11 @@
 package se.jdr.service;
 
-
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.jdr.model.User;
-import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.UserRepository;
 import se.jdr.repository.WorkItemRepository;
@@ -22,31 +19,39 @@ public final class UserService {
 
 	@Autowired
 	public UserService(UserRepository userRepository, WorkItemRepository workItemRepository,
-					   ServiceTransaction transaction) {
+			ServiceTransaction transaction) {
 		this.userRepository = userRepository;
 		this.workItemRepository = workItemRepository;
 		this.transaction = transaction;
 	}
 
-	public User addOrUpdateUser(User user) throws ServiceException {
-		if (user.getUsername().length() >= 10) {
-			return userRepository.save(user);
+	private User addOrUpdateUser(User user) {
+		return userRepository.save(user);
+	}
+
+	public User addUser(String username, String firstname, String lastname, String userId) throws ServiceException {
+		if (isValidUsername(username)) {
+			return addOrUpdateUser(new User(username, firstname, lastname, userId));
 		} else {
 			throw new ServiceException("Username is too short!");
 		}
 	}
 
 	public User updateUsername(User user, String username) throws ServiceException {
-		user.setUsername(username);
-		return addOrUpdateUser(user);
+		if (isValidUsername(username)) {
+			user.setUsername(username);
+			return addOrUpdateUser(user);
+		} else {
+			throw new ServiceException("Username is too short!");
+		}
 	}
 
-	public User updateFirstName(User user, String firstname) throws ServiceException {
+	public User updateFirstName(User user, String firstname) {
 		user.setFirstName(firstname);
 		return addOrUpdateUser(user);
 	}
 
-	public User updateLastName(User user, String lastname) throws ServiceException {
+	public User updateLastName(User user, String lastname) {
 		user.setLastname(lastname);
 		return addOrUpdateUser(user);
 	}
@@ -63,7 +68,6 @@ public final class UserService {
 			});
 		}
 		return addOrUpdateUser(user);
-
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) {
@@ -89,5 +93,10 @@ public final class UserService {
 	public Collection<User> getUserByUsername(String username) {
 		return userRepository.getUser("%", "%", username);
 	}
+	
+	private boolean isValidUsername(String username) {
+		return (username.length() >= 10);
+	}
+	
 
 }
