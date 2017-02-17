@@ -14,7 +14,6 @@ import se.jdr.model.User;
 import se.jdr.service.ServiceException;
 import se.jdr.service.UserService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,7 +37,7 @@ public final class UserRepositoryTest {
 	private String firstName = "Robert";
 	private String lastName = "Savela";
 	private String userid = "15";
-	private User user = new User(userName, firstName, lastName, userid, true);
+	private User user = new User(userName, firstName, lastName, userid);
 
 	@Test
 	public void canGetUser() throws ServiceException {
@@ -76,7 +75,7 @@ public final class UserRepositoryTest {
 
 	@Test
 	public void canGetUserInTeam() {
-		Team team = new Team("Team1", true);
+		Team team = new Team("Team1");
 		team.setUsers(Stream.of(user).collect(Collectors.toList()));
 		when(userRepository.findByTeamId(team.getId())).thenReturn(Stream.of(user).collect(Collectors.toList()));
 		List<User> users = userRepository.findByTeamId(team.getId()).stream().collect(Collectors.toList());
@@ -88,7 +87,7 @@ public final class UserRepositoryTest {
 
 	@Test
 	public void CanCountUsersByTeamId() {
-		Team team = new Team("Team1", true);
+		Team team = new Team("Team1");
 		team.setUsers(Stream.of(user).collect(Collectors.toList()));
 		when(userRepository.countByTeamId(team.getId())).thenReturn(1L);
 		Long size = userRepository.countByTeamId(team.getId());

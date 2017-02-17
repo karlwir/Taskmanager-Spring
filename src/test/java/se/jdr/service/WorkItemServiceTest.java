@@ -24,6 +24,7 @@ public class WorkItemServiceTest extends AbstractTest {
 
 	@Test
 	public void canAddOrUpdateWorkItem() {
+		@SuppressWarnings("unused")
 		WorkItem workitem = workItemService.addOrUpdateWorkItem(new WorkItem("broken windows", "replace the windows"));
 
 		fail("Not yet implemented");

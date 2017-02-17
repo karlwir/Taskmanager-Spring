@@ -1,15 +1,12 @@
 package se.jdr.service;
 
-import javafx.beans.binding.When;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -35,8 +32,8 @@ public class TeamServiceTest {
 	TeamRepository teamRepository;
 
 
-	User user = new User("Robertasdasdasd", "roberts", "Hello", "world", true);
-	Team team = new Team("Team", true);
+	User user = new User("Robertasdasdasd", "roberts", "Hello", "world");
+	Team team = new Team("Team");
 
 
 	@Test
