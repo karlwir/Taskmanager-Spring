@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -14,7 +13,6 @@ import javax.persistence.Table;
 public class User extends AbstractEntity {
 
 	@Column
-	@GeneratedValue
 	private String userId;
 	@Column(nullable = false, unique = true)
 	private String username;
@@ -63,12 +61,6 @@ public class User extends AbstractEntity {
 		return userId;
 	}
 
-	@Override
-	public String toString() {
-		return "User " + getId() + ", username: " + username + ", firstname: " + firstname + ", lastname: " + lastname
-				+ ", userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
-	}
-
 	public User setFirstName(String firstname) {
 		this.firstname = firstname;
 		return this;
@@ -93,5 +85,14 @@ public class User extends AbstractEntity {
 		this.team = team;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", createdBy=" + createdBy
+				+ ", modifiedBy=" + modifiedBy + "]";
+	}
+
+	
 
 }

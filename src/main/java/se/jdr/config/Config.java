@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -16,9 +17,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import se.jdr.service.CustomAuditorAware;
+
 @Configuration
 @EnableJpaRepositories("se.jdr.repository")
 @EnableTransactionManagement
+@EnableJpaAuditing
 public class Config {
 
 	@Bean
@@ -51,8 +55,14 @@ public class Config {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource());
 		factory.setJpaVendorAdapter(jpaVendorAdapter());
-		factory.setPackagesToScan("se.jdr.model");
+		factory.setPackagesToScan("se.jdr.model", "org.springframework.data.jpa.convert.threeten");
 
 		return factory;
 	}
+	
+	@Bean
+	CustomAuditorAware customAuditorAware() {
+		return new CustomAuditorAware("rkd3j");
+	}
+	
 }

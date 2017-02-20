@@ -1,12 +1,9 @@
 package se.jdr.service;
 
-import java.util.Collection;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import se.jdr.model.AbstractEntity;

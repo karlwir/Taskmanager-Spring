@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import se.jdr.model.Team;
 import se.jdr.model.User;
@@ -47,30 +49,13 @@ public class Taskmanager {
 			issueService.init();
 			workItemService.init();
 
-//			User user = userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
-//
+			User user = userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+
+			System.out.println(userService.getById(1L));
+			
 //			 Team team = teamService.createTeam("teammmmmmmmmmmm");
 //			 teamService.addUserToTeam(user, team);
 			 
-			 userService.getAll(5, 10).getContent().forEach(System.out::println);
 			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 ////
