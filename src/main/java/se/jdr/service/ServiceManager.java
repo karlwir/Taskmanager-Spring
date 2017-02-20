@@ -9,7 +9,7 @@ public class ServiceManager {
 	private WorkItemService workItemService;
 	private IssueService issueService;
 	private TeamService teamService;
-
+	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}

@@ -32,8 +32,7 @@ public class UserServiceTest extends AbstractTest {
 	public void shouldThrowExceptionWhenUsernameTooShort() throws ServiceException {
 		expectedException.expect(ServiceException.class);
 		expectedException.expectMessage("Username is too short!");
-		User user = new User("cl1", "Robert", "Savela");
-		userService.addOrUpdateUser(user);
+		userService.createUser("cl1", "Robert", "Savela");
 	}
 
 }

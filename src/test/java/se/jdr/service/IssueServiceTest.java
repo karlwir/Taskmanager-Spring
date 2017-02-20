@@ -42,7 +42,7 @@ public class IssueServiceTest extends AbstractTest {
 		expectedException.expect(ServiceException.class);
 		expectedException.expectMessage("Invalid work item status");
 		
-		issueService.addIssue(workItem, "IssueDescription");
+		issueService.createIssue(workItem, "IssueDescription");
 	}
 	
 }

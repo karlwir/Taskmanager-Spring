@@ -7,10 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import se.jdr.model.User.UserUpdater;
-import se.jdr.service.TeamService;
-import se.jdr.service.UserService;
-
 @Entity
 @Table(name = "teams")
 public class Team extends AbstractEntity {
@@ -25,9 +21,9 @@ public class Team extends AbstractEntity {
 	protected Team() {
 	}
 
-	public Team(String teamName, boolean activeTeam) {
+	public Team(String teamName) {
 		this.teamName = teamName;
-		this.activeTeam = activeTeam;
+		this.activeTeam = true;
 	}
 
 	public String getTeamName() {
@@ -46,35 +42,19 @@ public class Team extends AbstractEntity {
 	public String toString() {
 		return "Team id: " + getId() + ", team name: " + teamName + ", active: " + activeTeam;
 	}
-	
-	public TeamUpdater getUpdater(TeamService teamService) {
-		return new TeamUpdater(this, teamService);
+
+	public Team setTeamName(String teamName) {
+		this.teamName = teamName;
+		return this;
 	}
 
-	public class TeamUpdater {
+	public Team setActiveTeam(boolean activeTeam) {
+		this.activeTeam = activeTeam;
+		return this;
+	}
 
-		private Team team;
-		private TeamService teamService;
-
-		private TeamUpdater(Team team, TeamService teamService) {
-			this.team = team;
-			this.teamService = teamService;
-		}
-
-		public Team setTeamName(String teamName) {
-			team.teamName = teamName;
-			return teamService.addOrUpdateTeam(team);
-		}
-		
-		public Team setActiveTeam(boolean activeTeam) {
-			team.activeTeam = activeTeam;
-			return teamService.addOrUpdateTeam(team);
-		}
-
-		public void setUsers(Collection<User> users) {
-			team.users = users;
-		}
-
+	public void setUsers(Collection<User> users) {
+		this.users = users;
 	}
 
 }

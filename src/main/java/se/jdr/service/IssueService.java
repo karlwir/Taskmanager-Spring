@@ -11,43 +11,46 @@ import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.IssueRepository;
 
 @Component
-public final class IssueService {
-
-	private final IssueRepository issueRepository;
-	private final  ServiceManager serviceManager;
-	private final ServiceTransaction transaction;
+public final class IssueService extends BaseService<Issue, IssueRepository> {
 
 	@Autowired
-	public IssueService(IssueRepository issueRepository, ServiceManager serviceManager, ServiceTransaction transaction) {
-		this.issueRepository = issueRepository;
-		this.serviceManager = serviceManager;
-		this.transaction = transaction;
+	public IssueService(IssueRepository ir, ServiceManager sm, ServiceTransaction st) {
+		super(ir, sm, st);
 	}
 	
-	public Issue addOrUpdate(Issue issue) {
-		return issueRepository.save(issue);
-	}
-
-	public Issue addIssue(WorkItem workItem, String description) throws ServiceException {
+	public Issue createIssue(WorkItem workItem, String description) throws ServiceException {
 		if (workItem.getStatus() == Status.DONE) {
-			return transaction.execute(() -> {
-				workItem.getUpdater(serviceManager.getWorkItemService()).setStatus(Status.UNSTARTED);
-				return addOrUpdate(new Issue(workItem, description));
+			return super.transaction(() -> {
+				workItemService.updateStatus(workItem, Status.UNSTARTED);
+				return repository.save(new Issue(workItem, description));
 			});
 		} else {
-			throw new ServiceException("Invalid work item status");
+			throw new ServiceException("Invalid workitem status");
 		}
 	}
 	
-	public Collection<Issue> getByWorkItem(WorkItem workItem) {
-		return issueRepository.findByWorkItemId(workItem.getId());
+	public Collection<Issue> getByWorkItem(WorkItem workItem) throws ServiceException {
+		return super.execute(() -> repository.findByWorkItemId(workItem.getId()));
 	}
 
-	public Issue updateDescription(Issue issue, String description) {
-		return issue.getUpdater(this).setDescription(description);
+	public Issue updateDescription(Issue issue, String description) throws ServiceException {
+		return super.execute(() -> {
+			issue.setDescription(description);
+			return repository.save(issue);
+		});
 	}
 
-	public Issue updateStatus(Issue issue, boolean status) {
-		return issue.getUpdater(this).setOpenIssue(status);
+	public Issue updateStatusClosed(Issue issue) throws ServiceException {
+		return super.execute(() -> {
+			issue.setOpenIssue(false);
+			return repository.save(issue);
+		});
+	}
+
+	public Issue updateStatusOpen(Issue issue) throws ServiceException {
+		return super.execute(() -> {
+			issue.setOpenIssue(true);
+			return repository.save(issue);
+		});
 	}
 }

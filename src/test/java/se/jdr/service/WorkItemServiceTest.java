@@ -46,7 +46,7 @@ public class WorkItemServiceTest extends AbstractTest {
 	public void canOnlyAssignWorkItemToActiveUser() throws ServiceException {
 
 		when(user.isActiveUser()).thenReturn(false);
-		when(userService.addOrUpdateUser(user)).thenReturn(user);
+//		when(userService.addOrUpdateUser(user)).thenReturn(user);
 		
 		expectedException.expect(ServiceException.class);
 		expectedException.expectMessage("user must be active and cannot have more than 5 work items");

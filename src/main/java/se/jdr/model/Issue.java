@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import se.jdr.service.IssueService;
-
 @Entity
 @Table(name = "issues")
 public class Issue extends AbstractEntity {
@@ -44,30 +42,15 @@ public class Issue extends AbstractEntity {
 		return "Issue " + getId() + ", description: " + description + ", is open: " + openIssue + ", workitem id: "
 				+ workItem;
 	}
-	public IssueUpdater getUpdater(IssueService issueService) {
-		return new IssueUpdater(this, issueService);
+
+	public Issue setDescription(String description) {
+		this.description = description;
+		return this;
 	}
 
-	public class IssueUpdater {
-
-		private Issue issue;
-		private IssueService issueService;
-
-		private IssueUpdater(Issue issue, IssueService issueService) {
-			this.issue = issue;
-			this.issueService = issueService;
-		}
-
-		public Issue setDescription(String description) {
-			issue.description = description;
-			return issueService.addOrUpdate(issue);
-		}
-
-		public Issue setOpenIssue(boolean openIssue) {
-			issue.openIssue = openIssue;
-			return issueService.addOrUpdate(issue);
-		}
-
+	public Issue setOpenIssue(boolean openIssue) {
+		this.openIssue = openIssue;
+		return this;
 	}
 
 }

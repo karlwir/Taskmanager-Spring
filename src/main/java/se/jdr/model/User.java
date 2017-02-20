@@ -9,8 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import se.jdr.service.UserService;
-
 @Entity
 @Table(name = "users")
 public class User extends AbstractEntity {
@@ -64,52 +62,36 @@ public class User extends AbstractEntity {
 	public String getUserId() {
 		return userId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "User " + getId() + ", username: " + username + ", firstname: " + firstname + ", lastname: " + lastname
-				+ "userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
+				+ ", userId : " + userId + ", active: " + activeUser + ", teamId: " + team;
 	}
 
-	public UserUpdater getUpdater(UserService userService) {
-		return new UserUpdater(this, userService);
+	public User setFirstName(String firstname) {
+		this.firstname = firstname;
+		return this;
 	}
 
-	public class UserUpdater {
+	public User setLastName(String lastname) {
+		this.lastname = lastname;
+		return this;
+	}
 
-		private User user;
-		private UserService userService;
+	public User setUsername(String username) {
+		this.username = username;
+		return this;
+	}
 
-		private UserUpdater(User user, UserService userService) {
-			this.user = user;
-			this.userService = userService;
-		}
+	public User setActiveUser(boolean activeUser) {
+		this.activeUser = activeUser;
+		return this;
+	}
 
-		public User setFirstName(String firstname) {
-			user.firstname = firstname;
-			return userService.addOrUpdateUser(user);
-		}
-
-		public User setLastName(String lastname) {
-			user.lastname = lastname;
-			return userService.addOrUpdateUser(user);
-		}
-
-		public User setUsername(String username) {
-			user.username = username;
-			return userService.addOrUpdateUser(user);
-		}
-
-		public User setActiveUser(boolean activeUser) {
-			user.activeUser = activeUser;
-			return userService.addOrUpdateUser(user);
-		}
-
-		public User setTeam(Team team) {
-			user.team = team;
-			return userService.addOrUpdateUser(user);
-		}
-
+	public User setTeam(Team team) {
+		this.team = team;
+		return this;
 	}
 
 }

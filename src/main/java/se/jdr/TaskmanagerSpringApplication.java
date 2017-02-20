@@ -1,13 +1,15 @@
 package se.jdr;
 
+import java.time.LocalDateTime;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import se.jdr.model.Team;
 import se.jdr.model.User;
-import se.jdr.model.User.UserUpdater;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.WorkItemRepository;
@@ -27,36 +29,44 @@ public class TaskmanagerSpringApplication {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			ServiceManager serviceManager = context.getBean(ServiceManager.class);
-			UserService userService = context.getBean(UserService.class);
-			TeamService teamService = context.getBean(TeamService.class);
-			IssueService issueService = context.getBean(IssueService.class);
-			WorkItemService workItemService = context.getBean(WorkItemService.class);
-			serviceManager.setIssueService(issueService);
-			serviceManager.setTeamService(teamService);
-			serviceManager.setUserService(userService);
-			serviceManager.setWorkItemService(workItemService);
-
 			
-			User user = userService.addOrUpdateUser(new User("danne101012340198701", "Daniel", "kemter"));
+			ServiceManager serviceManager = context.getBean(ServiceManager.class);
+			
+			serviceManager.setIssueService(context.getBean(IssueService.class));
+			serviceManager.setTeamService(context.getBean(TeamService.class));
+			serviceManager.setUserService(context.getBean(UserService.class));
+			serviceManager.setWorkItemService(context.getBean(WorkItemService.class));
+			
+			UserService userService = serviceManager.getUserService();
+			TeamService teamService = serviceManager.getTeamService();
+			IssueService issueService = serviceManager.getIssueService();
+			WorkItemService workItemService = serviceManager.getWorkItemService();
 
-			// Team team = teamService.addOrUpdateTeam(new
-			// Team("teammmmmmmmmmmm", true));
-			// teamService.addUserToTeam(user, team);
+			userService.init();
+			teamService.init();
+			issueService.init();
+			workItemService.init();
+
+//			User user = userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//
+//			 Team team = teamService.createTeam("teammmmmmmmmmmm");
+//			 teamService.addUserToTeam(user, team);
+			 
+			 System.out.println(userService.getById(9L));
 			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
-
-			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-			WorkItem workItem4 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
-
-			workItemService.addUserToWorkItem(workItem, user);
-			workItemService.addUserToWorkItem(workItem2, user);
-			workItemService.addUserToWorkItem(workItem3, user);
-			workItemService.addUserToWorkItem(workItem4, user);
-
-			 userService.updateUserStatus(user, false);
+////
+//			WorkItem workItem = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+//			WorkItem workItem2 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+//			WorkItem workItem3 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+//			WorkItem workItem4 = workItemService.addOrUpdateWorkItem(new WorkItem("work", "item"));
+//
+//			workItemService.addUserToWorkItem(workItem, user);
+//			workItemService.addUserToWorkItem(workItem2, user);
+//			workItemService.addUserToWorkItem(workItem3, user);
+//			workItemService.addUserToWorkItem(workItem4, user);
+//
+//			 userService.updateUserStatus(user, false);
 
 			// Collection<Issue> issues =
 			// issueService.getByWorkItemId(workItem.getId());

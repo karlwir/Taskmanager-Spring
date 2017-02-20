@@ -1,7 +1,5 @@
 package se.jdr.service;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,44 +8,51 @@ import se.jdr.model.User;
 import se.jdr.repository.TeamRepository;
 
 @Component
-public final class TeamService {
-
-	private final TeamRepository teamRepository;
-	private final ServiceManager serviceManager;
+public final class TeamService extends BaseService<Team, TeamRepository> {
 
 	@Autowired
-	public TeamService(TeamRepository teamRepository, ServiceManager serviceManager) {
-		this.teamRepository = teamRepository;
-		this.serviceManager = serviceManager;
+	public TeamService(TeamRepository tr, ServiceManager sm, ServiceTransaction st) {
+		super(tr, sm, st);
 	}
 
-	public Team addOrUpdateTeam(Team team) {
-		return teamRepository.save(team);
+	public Team createTeam(String teamName) throws ServiceException {
+		return super.execute(() -> repository.save(new Team(teamName)));
 	}
 
-	public Team updateTeamStatus(Team team, boolean status) {
-		return team.getUpdater(this).setActiveTeam(status);
-	}
-	
-	public Team updateTeamName(Team team, String teamName) {
-		return team.getUpdater(this).setTeamName(teamName);
+	public Team updateStatusActive(Team team) throws ServiceException {
+		return super.execute(() -> {
+			team.setActiveTeam(true);
+			return repository.save(team);
+		});
 	}
 
-	public Collection<Team> getAllTeams() {
-		return (Collection<Team>) teamRepository.findAll();
+	public Team updateStatusInactive(Team team) throws ServiceException {
+		return super.execute(() -> {
+			team.setActiveTeam(false);
+			return repository.save(team);
+		});
+	}
+
+	public Team updateName(Team team, String teamName) throws ServiceException {
+		return super.execute(() -> {
+			team.setTeamName(teamName);
+			return repository.save(team);
+		});
 	}
 
 	public Team addUserToTeam(User user, Team team) throws ServiceException {
 		if (isValidTeamSize(team)) {
-			user.getUpdater(serviceManager.getUserService()).setTeam(team);
-			return team;
+			return super.execute(() -> {
+				userService.updateTeam(user, team);
+				return team;
+			});
 		} else {
 			throw new ServiceException("Team is full!");
 		}
 	}
 
-	private boolean isValidTeamSize(Team team) {
-		return serviceManager.getUserService().getUsersByTeamId(team.getId()).size() < 10;
+	private boolean isValidTeamSize(Team team) throws ServiceException {
+		return super.execute(() -> userService.getUsersByTeamId(team.getId()).size() < 10);
 	}
 
 }

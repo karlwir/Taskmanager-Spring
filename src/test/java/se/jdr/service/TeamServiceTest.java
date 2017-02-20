@@ -35,7 +35,7 @@ public class TeamServiceTest extends AbstractTest {
 
 
 	User user = new User("Robertasdasdasd", "roberts", "Hello");
-	Team team = new Team("Team", true);
+	Team team = new Team("Team");
 
 
 	@Test
