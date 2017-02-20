@@ -3,12 +3,16 @@ package se.jdr.service;
 import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import se.jdr.model.AbstractEntity;
 import se.jdr.service.ServiceTransaction.Action;
 
-abstract class BaseService<E extends AbstractEntity, R extends CrudRepository<E, Long>> {
+abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingRepository<E, Long>> {
 
 	protected R repository;
 	private ServiceTransaction serviceTransaction;
@@ -47,11 +51,19 @@ abstract class BaseService<E extends AbstractEntity, R extends CrudRepository<E,
 		}
 	}
 	
+	protected Pageable createPageRequest(int page, int size) {
+	    return new PageRequest(page, size);
+	}
+	
 	public E getById(Long id) throws ServiceException {
 		return execute(() -> repository.findOne(id));
 	}
 	
-	public Collection<E> getAll() throws ServiceException {
-		return (Collection<E>) execute(() -> repository.findAll());
+	public Page<E> getAll(int page, int size) throws ServiceException {
+		return execute(() -> repository.findAll(createPageRequest(page, size)));
+	}
+	
+	public Page<E> getAll(int page) throws ServiceException {
+		return getAll(page, 10);
 	}
 }

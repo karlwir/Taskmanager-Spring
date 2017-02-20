@@ -15,7 +15,7 @@ import se.jdr.config.TestConfig;
 
 @TestPropertySource("/test.properties")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TaskmanagerSpringApplication.class)
+@SpringBootTest(classes = Taskmanager.class)
 @ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public abstract class AbstractTest {
 

@@ -20,10 +20,10 @@ import se.jdr.service.UserService;
 import se.jdr.service.WorkItemService;
 
 @SpringBootApplication
-public class TaskmanagerSpringApplication {
+public class Taskmanager {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TaskmanagerSpringApplication.class, args);
+		SpringApplication.run(Taskmanager.class, args);
 	}
 
 	@Bean
@@ -48,11 +48,29 @@ public class TaskmanagerSpringApplication {
 			workItemService.init();
 
 //			User user = userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
+//			userService.createUser(LocalDateTime.now().toString(), "Daniel", "kemter");
 //
 //			 Team team = teamService.createTeam("teammmmmmmmmmmm");
 //			 teamService.addUserToTeam(user, team);
 			 
-			 System.out.println(userService.getById(9L));
+			 userService.getAll(5, 10).getContent().forEach(System.out::println);
 			// teamService.addUserToTeam(user2, team);
 			// teamService.addUserToTeam(user3, team);
 ////
