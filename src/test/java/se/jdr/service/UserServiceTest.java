@@ -24,10 +24,6 @@ public class UserServiceTest extends AbstractTest {
 	@Autowired
 	UserService userService;
 
-	@MockBean
-	UserRepository userRepository;
-
-
 	@Test
 	public void shouldThrowExceptionWhenUsernameTooShort() throws ServiceException {
 		expectedException.expect(ServiceException.class);

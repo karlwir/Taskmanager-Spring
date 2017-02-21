@@ -15,10 +15,10 @@ import se.jdr.config.TestConfig;
 
 @TestPropertySource("/test.properties")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Taskmanager.class)
+@SpringBootTest
 @ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public abstract class AbstractTest {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+//	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 }
