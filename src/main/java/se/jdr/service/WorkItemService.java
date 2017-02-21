@@ -21,25 +21,25 @@ public final class WorkItemService extends BaseService<WorkItem, WorkItemReposit
 	}
 
 	public WorkItem createWorkItem(String title, String description) throws ServiceException {
-		return super.execute(() -> repository.save(new WorkItem(title, description)));
+		return execute(() -> repository.save(new WorkItem(title, description)));
 	}
 
 	public WorkItem updateTitle(WorkItem workItem, String title) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			workItem.setTitle(title);
 			return repository.save(workItem);
 		});
 	}
 
 	public WorkItem updateDescription(WorkItem workItem, String description) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			workItem.setDescription(description);
 			return repository.save(workItem);
 		});
 	}
 
 	public WorkItem updateStatus(WorkItem workItem, WorkItem.Status status) throws ServiceException {
-		return super.transaction(() -> {
+		return transaction(() -> {
 			if (status == Status.ARCHIVED) {
 				for(Issue issue : issueService.getByWorkItem(workItem)) {
 					issueService.updateStatusClosed(issue);
@@ -52,7 +52,7 @@ public final class WorkItemService extends BaseService<WorkItem, WorkItemReposit
 
 	public WorkItem addUserToWorkItem(WorkItem workItem, User user) throws ServiceException {
 		if (user.isActiveUser() && isValidAmountOfWorkItems(user)) {
-			return super.execute(() -> {
+			return execute(() -> {
 				workItem.setUser(user);
 				return repository.save(workItem);
 			});
@@ -62,31 +62,31 @@ public final class WorkItemService extends BaseService<WorkItem, WorkItemReposit
 	}
 
 	public Collection<WorkItem> getWorkItemsByStatus(WorkItem.Status status) throws ServiceException {
-		return super.execute(() -> repository.findByStatus(status));
+		return execute(() -> repository.findByStatus(status));
 	}
 
 	public Collection<WorkItem> getWorkItemsByTeam(Long teamId) throws ServiceException {
-		return super.execute(() -> repository.getWorkItemsByTeamId(teamId));
+		return execute(() -> repository.getWorkItemsByTeamId(teamId));
 	}
 
 	public Collection<WorkItem> getWorkItemsByUser(User user) throws ServiceException {
-		return super.execute(() -> repository.findByUserId(user.getId()));
+		return execute(() -> repository.findByUserId(user.getId()));
 	}
 
 	public Collection<WorkItem> getWorkItemsWithIssues() throws ServiceException {
-		return super.execute(() -> repository.getAllWorkItemsWithIssues());
+		return execute(() -> repository.getAllWorkItemsWithIssues());
 	}
 
 	public Collection<WorkItem> getWorkItemByDescripton(String description) throws ServiceException {
-		return super.execute(() -> repository.findByDescription(description));
+		return execute(() -> repository.findByDescription(description));
 	}
 	
 	public Collection<WorkItem> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) throws ServiceException {
-		return (Collection<WorkItem>) super.execute(() -> repository.findAll(auditingService.getDoneWorkItemsByDate(from, to)));
+		return (Collection<WorkItem>) execute(() -> repository.findAll(auditingService.getDoneWorkItemsByDate(from, to)));
 	}
 
 	private boolean isValidAmountOfWorkItems(User user) throws ServiceException {
-		return super.execute(() -> repository.countByUserId(user.getId()) < 5);
+		return execute(() -> repository.countByUserId(user.getId()) < 5);
 	}
 
 }

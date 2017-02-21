@@ -21,27 +21,27 @@ public class UserService extends BaseService<User, UserRepository> {
 
 	public User createUser(String username, String firstname, String lastname) throws ServiceException {
 		if (isValidUsername(username)) {
-			return super.execute(() -> repository.save(new User(username, firstname, lastname)));
+			return execute(() -> repository.save(new User(username, firstname, lastname)));
 		} else {
 			throw new ServiceException("Username is too short!");
 		}
 	}
 
 	public User updateFirstName(User user, String firstname) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			user.setFirstName(firstname);
 			return repository.save(user);
 		});
 	}
 
 	public User updateFirstName(Long id, String firstname) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			return repository.save(repository.findOne(id).setFirstName(firstname));
 		});
 	}
 
 	public User updateLastName(User user, String lastname) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			user.setLastName(lastname);
 			return repository.save(user);
 		});
@@ -49,7 +49,7 @@ public class UserService extends BaseService<User, UserRepository> {
 
 	public User updateUsername(User user, String username) throws ServiceException {
 		if (isValidUsername(username)) {
-			return super.execute(() -> {
+			return execute(() -> {
 				user.setUsername(username);
 				return repository.save(user);
 			});
@@ -59,7 +59,7 @@ public class UserService extends BaseService<User, UserRepository> {
 	}
 
 	public User updateStatusInactive(User user) throws ServiceException {
-		return super.transaction(() -> {
+		return transaction(() -> {
 			for (WorkItem workitem : workItemService.getWorkItemsByUser(user)) {
 				workItemService.updateStatus(workitem, Status.UNSTARTED);
 			}
@@ -69,29 +69,29 @@ public class UserService extends BaseService<User, UserRepository> {
 	}
 
 	public User updateStatusActive(User user) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			user.setActiveUser(true);
 			return repository.save(user);
 		});
 	}
 
 	public User updateTeam(User user, Team team) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			user.setTeam(team);
 			return repository.save(user);
 		});
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) throws ServiceException {
-		return super.execute(() -> repository.findByTeamId(teamId));
+		return execute(() -> repository.findByTeamId(teamId));
 	}
 
 	public User getUserByUserId(String userId) throws ServiceException {
-		return super.execute(() -> repository.findUserByUserId(userId));
+		return execute(() -> repository.findUserByUserId(userId));
 	}
 
 	public Collection<User> getUser(String firstname, String lastname, String username) throws ServiceException {
-		return super.execute(() -> repository.getUser(firstname, lastname, username));
+		return execute(() -> repository.getUser(firstname, lastname, username));
 	}
 
 	public Collection<User> getUserByFirstname(String firstname) throws ServiceException {

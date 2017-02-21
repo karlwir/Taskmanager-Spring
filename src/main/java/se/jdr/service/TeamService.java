@@ -16,25 +16,25 @@ public final class TeamService extends BaseService<Team, TeamRepository> {
 	}
 
 	public Team createTeam(String teamName) throws ServiceException {
-		return super.execute(() -> repository.save(new Team(teamName)));
+		return execute(() -> repository.save(new Team(teamName)));
 	}
 
 	public Team updateStatusActive(Team team) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			team.setActiveTeam(true);
 			return repository.save(team);
 		});
 	}
 
 	public Team updateStatusInactive(Team team) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			team.setActiveTeam(false);
 			return repository.save(team);
 		});
 	}
 
 	public Team updateName(Team team, String teamName) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			team.setTeamName(teamName);
 			return repository.save(team);
 		});
@@ -42,7 +42,7 @@ public final class TeamService extends BaseService<Team, TeamRepository> {
 
 	public Team addUserToTeam(User user, Team team) throws ServiceException {
 		if (isValidTeamSize(team)) {
-			return super.execute(() -> {
+			return execute(() -> {
 				userService.updateTeam(user, team);
 				return team;
 			});
@@ -52,7 +52,7 @@ public final class TeamService extends BaseService<Team, TeamRepository> {
 	}
 
 	private boolean isValidTeamSize(Team team) throws ServiceException {
-		return super.execute(() -> userService.getUsersByTeamId(team.getId()).size() < 10);
+		return execute(() -> userService.getUsersByTeamId(team.getId()).size() < 10);
 	}
 
 }

@@ -20,7 +20,7 @@ public final class IssueService extends BaseService<Issue, IssueRepository> {
 	
 	public Issue createIssue(WorkItem workItem, String description) throws ServiceException {
 		if (workItem.getStatus() == Status.DONE) {
-			return super.transaction(() -> {
+			return transaction(() -> {
 				workItemService.updateStatus(workItem, Status.UNSTARTED);
 				return repository.save(new Issue(workItem, description));
 			});
@@ -30,25 +30,25 @@ public final class IssueService extends BaseService<Issue, IssueRepository> {
 	}
 	
 	public Collection<Issue> getByWorkItem(WorkItem workItem) throws ServiceException {
-		return super.execute(() -> repository.findByWorkItemId(workItem.getId()));
+		return execute(() -> repository.findByWorkItemId(workItem.getId()));
 	}
 
 	public Issue updateDescription(Issue issue, String description) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			issue.setDescription(description);
 			return repository.save(issue);
 		});
 	}
 
 	public Issue updateStatusClosed(Issue issue) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			issue.setOpenIssue(false);
 			return repository.save(issue);
 		});
 	}
 
 	public Issue updateStatusOpen(Issue issue) throws ServiceException {
-		return super.execute(() -> {
+		return execute(() -> {
 			issue.setOpenIssue(true);
 			return repository.save(issue);
 		});
