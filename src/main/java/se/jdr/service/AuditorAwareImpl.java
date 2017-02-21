@@ -4,11 +4,11 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuditorAware implements AuditorAware<String> {
+public class AuditorAwareImpl implements AuditorAware<String> {
 
 	private String user;
 
-	public CustomAuditorAware() {
+	public AuditorAwareImpl() {
 		this.user = "Kalle";
 	}
 
