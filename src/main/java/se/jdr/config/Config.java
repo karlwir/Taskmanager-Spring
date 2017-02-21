@@ -1,5 +1,6 @@
 package se.jdr.config;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -16,8 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
-import se.jdr.service.CustomAuditorAware;
 
 @Configuration
 @EnableJpaRepositories("se.jdr.repository")
@@ -57,12 +56,12 @@ public class Config {
 		factory.setJpaVendorAdapter(jpaVendorAdapter());
 		factory.setPackagesToScan("se.jdr.model", "org.springframework.data.jpa.convert.threeten");
 
+
 		return factory;
 	}
 	
 	@Bean
-	CustomAuditorAware customAuditorAware() {
-		return new CustomAuditorAware("rkd3j");
+	EntityManager entityManager() {
+		return entityManagerFactory().getObject().createEntityManager();
 	}
-	
 }

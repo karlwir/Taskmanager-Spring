@@ -9,6 +9,7 @@ public class ServiceManager {
 	private WorkItemService workItemService;
 	private IssueService issueService;
 	private TeamService teamService;
+	private AuditingService auditingService;
 	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
@@ -41,7 +42,13 @@ public class ServiceManager {
 	public TeamService getTeamService() {
 		return teamService;
 	}
-	
-	
+
+	public AuditingService getAuditingService() {
+		return auditingService;
+	}
+
+	public void setAuditingService(AuditingService auditingService) {
+		this.auditingService = auditingService;
+	}
 	
 }

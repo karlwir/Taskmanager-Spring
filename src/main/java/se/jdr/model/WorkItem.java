@@ -1,5 +1,6 @@
 package se.jdr.model;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -10,21 +11,33 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.LastModifiedDate;
+
 @Entity
+@Audited
 @Table(name = "workitems")
 public class WorkItem extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String title;
+	
 	@Column(nullable = false)
 	private String description;
+	
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	
 	@ManyToOne
 	private User user;
-	private String dateOfCompletion;
+	
 	@OneToMany(mappedBy = "workItem")
+	@NotAudited
 	private Collection<Issue> issues;
+
+	@LastModifiedDate
+	protected LocalDateTime revisionDate;
 
 	protected WorkItem() {
 	}
@@ -51,16 +64,8 @@ public class WorkItem extends AbstractEntity {
 		return user;
 	}
 
-	public String getDateOfCompletion() {
-		return dateOfCompletion;
-	}
-
 	public Collection<Issue> getIssues() {
 		return issues;
-	}
-
-	public void setDateOfCompletion(String dateOfCompletion) {
-		this.dateOfCompletion = dateOfCompletion;
 	}
 
 	public enum Status {
@@ -70,7 +75,7 @@ public class WorkItem extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "Workitem " + getId() + ", title: " + title + ", description: " + description + ", status: " + status
-				+ ", assignedUserId: " + user + ", dateOfCompletion: " + dateOfCompletion;
+				+ ", assignedUserId: " + user;
 	}
 
 	public WorkItem setStatus(Status status) {

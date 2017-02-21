@@ -60,7 +60,7 @@ public class UserService extends BaseService<User, UserRepository> {
 
 	public User updateStatusInactive(User user) throws ServiceException {
 		return super.transaction(() -> {
-			for(WorkItem workitem : workItemService.getWorkItemsByUser(user)) {
+			for (WorkItem workitem : workItemService.getWorkItemsByUser(user)) {
 				workItemService.updateStatus(workitem, Status.UNSTARTED);
 			}
 			user.setActiveUser(false);
@@ -74,12 +74,12 @@ public class UserService extends BaseService<User, UserRepository> {
 			return repository.save(user);
 		});
 	}
-	
+
 	public User updateTeam(User user, Team team) throws ServiceException {
 		return super.execute(() -> {
 			user.setTeam(team);
 			return repository.save(user);
-		});	
+		});
 	}
 
 	public Collection<User> getUsersByTeamId(Long teamId) throws ServiceException {

@@ -1,5 +1,6 @@
 package se.jdr.model;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -8,25 +9,41 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.LastModifiedDate;
+
 @Entity
+@Audited
 @Table(name = "users")
 public class User extends AbstractEntity {
 
 	@Column
 	private String userId;
+	
 	@Column(nullable = false, unique = true)
 	private String username;
+	
 	@Column(nullable = false)
 	private String firstname;
+	
 	@Column(nullable = false)
 	private String lastname;
+	
 	@Column(nullable = false)
 	private boolean activeUser;
+	
 	@ManyToOne
+	@NotAudited
 	private Team team;
+	
 	@OneToMany(mappedBy = "user")
+	@NotAudited
 	private Collection<WorkItem> workitems;
 
+	@LastModifiedDate
+	protected LocalDateTime revisionDate;
+	
 	protected User() {
 	}
 
@@ -89,7 +106,7 @@ public class User extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", firstname=" + firstname + ", lastname="
-				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", createdBy=" + createdBy
+				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate + ", createdBy=" + createdBy
 				+ ", modifiedBy=" + modifiedBy + "]";
 	}
 

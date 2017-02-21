@@ -18,6 +18,7 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 	protected WorkItemService workItemService;
 	protected TeamService teamService;
 	protected IssueService issueService;
+	protected AuditingService auditingService;
 	
 	public BaseService(R repository, ServiceManager serviceManager, ServiceTransaction serviceTransaction) {
 		this.repository = repository;
@@ -30,6 +31,7 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 		this.workItemService = serviceManager.getWorkItemService();
 		this.teamService = serviceManager.getTeamService();
 		this.issueService = serviceManager.getIssueService();
+		this.auditingService = serviceManager.getAuditingService();
 	}
 	
 	protected <T> T execute(Action<T> action) throws ServiceException {

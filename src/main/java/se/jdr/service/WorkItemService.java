@@ -1,5 +1,6 @@
 package se.jdr.service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,10 @@ public final class WorkItemService extends BaseService<WorkItem, WorkItemReposit
 
 	public Collection<WorkItem> getWorkItemByDescripton(String description) throws ServiceException {
 		return super.execute(() -> repository.findByDescription(description));
+	}
+	
+	public Collection<WorkItem> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) throws ServiceException {
+		return (Collection<WorkItem>) super.execute(() -> repository.findAll(auditingService.getDoneWorkItemsByDate(from, to)));
 	}
 
 	private boolean isValidAmountOfWorkItems(User user) throws ServiceException {

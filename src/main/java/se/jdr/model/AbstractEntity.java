@@ -29,7 +29,7 @@ public abstract class AbstractEntity {
 	protected LocalDateTime createdDate;
 	
 	@LastModifiedDate
-	protected LocalDateTime modifiedDate;
+	protected LocalDateTime revisionDate;
 	
 	@CreatedBy
 	protected String createdBy;
@@ -42,7 +42,7 @@ public abstract class AbstractEntity {
 	}
 
 	public LocalDateTime getModifiedDate() {
-		return modifiedDate;
+		return revisionDate;
 	}
 
 	public String getCreatedBy() {
@@ -58,7 +58,7 @@ public abstract class AbstractEntity {
 	}
 
 	public void setModifiedDate(LocalDateTime modifiedDate) {
-		this.modifiedDate = modifiedDate;
+		this.revisionDate = modifiedDate;
 	}
 
 	public void setCreatedBy(String createdBy) {
