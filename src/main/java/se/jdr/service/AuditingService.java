@@ -17,7 +17,7 @@ import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 
 @Component
-public class AuditingService {
+class AuditingService {
 
 	private EntityManager entityManager;
 	

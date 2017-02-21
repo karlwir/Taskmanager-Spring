@@ -17,7 +17,6 @@ import se.jdr.service.ServiceManager;
 import se.jdr.service.TeamService;
 import se.jdr.service.UserService;
 import se.jdr.service.WorkItemService;
-import se.jdr.service.AuditingService;
 
 @SpringBootApplication
 public class Taskmanager {
@@ -29,25 +28,15 @@ public class Taskmanager {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			ServiceManager serviceManager = context.getBean(ServiceManager.class);
 			
-			serviceManager.setIssueService(context.getBean(IssueService.class));
-			serviceManager.setTeamService(context.getBean(TeamService.class));
-			serviceManager.setUserService(context.getBean(UserService.class));
-			serviceManager.setWorkItemService(context.getBean(WorkItemService.class));
-			serviceManager.setAuditingService(context.getBean(AuditingService.class));
+			ServiceManager serviceManager = context.getBean(ServiceManager.class);
 			
 			UserService userService = serviceManager.getUserService();
 			TeamService teamService = serviceManager.getTeamService();
 			IssueService issueService = serviceManager.getIssueService();
 			WorkItemService workItemService = serviceManager.getWorkItemService();
 
-			userService.init();
-			teamService.init();
-			issueService.init();
-			workItemService.init();
-
-//			User user = userService.createUser("Danneusername", "Daniel", "kemter");
+//			User user = userService.createUser("Danneusername2", "Daniel", "kemter");
 			
 //			System.out.println(auditingService.getByNameUpdate("kemter", LocalDateTime.now().minusHours(10), LocalDateTime.now()));
 //
@@ -58,11 +47,11 @@ public class Taskmanager {
 //			 Team team = teamService.createTeam("teammmmmmmmmmmm");
 //			 teamService.addUserToTeam(user, team);
 ////
-//			workItemService.createWorkItem("workitem1", "workitem1 description");
+			WorkItem workItem = workItemService.createWorkItem("workitem1", "workitem1 description");
 //			workItemService.createWorkItem("workitem2", "workitem2 description");
 //			workItemService.createWorkItem("workitem3", "workitem3 description");
 
-//			workItemService.updateStatus(workItemService.getById(3L), Status.STARTED);
+			workItemService.updateStatus(workItem, Status.DONE);
 			
 			System.out.println(
 					workItemService.getDoneWorkItemsByDate(LocalDateTime.now().minusSeconds(10), LocalDateTime.now())

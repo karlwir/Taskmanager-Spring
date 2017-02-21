@@ -14,8 +14,8 @@ import se.jdr.repository.IssueRepository;
 public final class IssueService extends BaseService<Issue, IssueRepository> {
 
 	@Autowired
-	public IssueService(IssueRepository ir, ServiceManager sm, ServiceTransaction st) {
-		super(ir, sm, st);
+	public IssueService(IssueRepository ir, ServiceTransaction st) {
+		super(ir, st);
 	}
 	
 	public Issue createIssue(WorkItem workItem, String description) throws ServiceException {

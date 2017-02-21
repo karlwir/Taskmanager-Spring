@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
@@ -43,6 +44,8 @@ public class User extends AbstractEntity {
 
 	@LastModifiedDate
 	protected LocalDateTime revisionDate;
+	@LastModifiedBy
+	protected String revisionBy;
 	
 	protected User() {
 	}
@@ -107,7 +110,7 @@ public class User extends AbstractEntity {
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", firstname=" + firstname + ", lastname="
 				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate + ", createdBy=" + createdBy
-				+ ", modifiedBy=" + modifiedBy + "]";
+				+ ", modifiedBy=" + revisionBy + "]";
 	}
 
 	

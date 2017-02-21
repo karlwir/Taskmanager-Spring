@@ -13,25 +13,47 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 
 	protected R repository;
 	private ServiceTransaction serviceTransaction;
-	private ServiceManager serviceManager;
 	protected UserService userService;
 	protected WorkItemService workItemService;
 	protected TeamService teamService;
 	protected IssueService issueService;
 	protected AuditingService auditingService;
 	
-	public BaseService(R repository, ServiceManager serviceManager, ServiceTransaction serviceTransaction) {
+	public BaseService(R repository, ServiceTransaction serviceTransaction) {
 		this.repository = repository;
-		this.serviceManager = serviceManager;
 		this.serviceTransaction = serviceTransaction;
 	}
 	
-	public void init() {
-		this.userService = serviceManager.getUserService();
-		this.workItemService = serviceManager.getWorkItemService();
-		this.teamService = serviceManager.getTeamService();
-		this.issueService = serviceManager.getIssueService();
-		this.auditingService = serviceManager.getAuditingService();
+	protected void setServices(UserService userService, 
+							   WorkItemService workItemService, 
+							   IssueService issueService, 
+							   TeamService teamService, 
+							   AuditingService auditingService) {
+		this.userService = userService;
+		this.workItemService = workItemService;
+		this.issueService = issueService;
+		this.teamService = teamService;
+		this.auditingService = auditingService;
+	}
+	
+	protected void setUserService(UserService userService){
+		this.userService = userService;
+	}
+	
+	protected void setWorkItemService(WorkItemService workItemService) {
+		this.workItemService = workItemService;
+	}
+	
+	protected void setIssueService(IssueService issueService) {
+		this.issueService = issueService;
+	}
+	
+	protected void setTeamService(TeamService teamService) {
+		this.teamService = teamService;
+	}
+	
+	protected void setAuditingService(AuditingService auditingService) {
+		this.auditingService = auditingService;
 	}
 	
 	protected <T> T execute(Action<T> action) throws ServiceException {

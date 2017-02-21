@@ -15,8 +15,8 @@ import se.jdr.repository.UserRepository;
 public class UserService extends BaseService<User, UserRepository> {
 
 	@Autowired
-	public UserService(UserRepository ur, ServiceManager sm, ServiceTransaction st) {
-		super(ur, sm, st);
+	public UserService(UserRepository ur, ServiceTransaction st) {
+		super(ur, st);
 	}
 
 	public User createUser(String username, String firstname, String lastname) throws ServiceException {

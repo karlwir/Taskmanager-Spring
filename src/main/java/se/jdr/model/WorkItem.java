@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
@@ -38,6 +39,8 @@ public class WorkItem extends AbstractEntity {
 
 	@LastModifiedDate
 	protected LocalDateTime revisionDate;
+	@LastModifiedBy
+	protected String revisionBy;
 
 	protected WorkItem() {
 	}

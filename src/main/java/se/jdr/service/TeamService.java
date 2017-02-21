@@ -11,8 +11,8 @@ import se.jdr.repository.TeamRepository;
 public final class TeamService extends BaseService<Team, TeamRepository> {
 
 	@Autowired
-	public TeamService(TeamRepository tr, ServiceManager sm, ServiceTransaction st) {
-		super(tr, sm, st);
+	public TeamService(TeamRepository tr, ServiceTransaction st) {
+		super(tr, st);
 	}
 
 	public Team createTeam(String teamName) throws ServiceException {

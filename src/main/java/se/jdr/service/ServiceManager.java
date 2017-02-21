@@ -1,5 +1,8 @@
 package se.jdr.service;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,21 +13,32 @@ public class ServiceManager {
 	private IssueService issueService;
 	private TeamService teamService;
 	private AuditingService auditingService;
+	private ArrayList<BaseService<?,?>> services = new ArrayList<>();
 	
-	public void setUserService(UserService userService) {
+	@Autowired
+	public ServiceManager(UserService userService, WorkItemService workItemService, IssueService issueService,
+			TeamService teamService, AuditingService auditingService) {
 		this.userService = userService;
-	}
-
-	public void setWorkItemService(WorkItemService workItemService) {
 		this.workItemService = workItemService;
-	}
-
-	public void setIssueService(IssueService issueService) {
 		this.issueService = issueService;
-	}
-
-	public void setTeamService(TeamService teamService) {
 		this.teamService = teamService;
+		this.auditingService = auditingService;
+		services.add(userService);
+		services.add(issueService);
+		services.add(teamService);
+		services.add(workItemService);
+		init();
+	}
+	
+	private void init() {
+		services.forEach(s -> {
+			s.setUserService(userService);
+			s.setWorkItemService(workItemService);
+			s.setIssueService(issueService);
+			s.setTeamService(teamService);
+			s.setAuditingService(auditingService);
+			}
+		);
 	}
 
 	public UserService getUserService() {
@@ -45,10 +59,6 @@ public class ServiceManager {
 
 	public AuditingService getAuditingService() {
 		return auditingService;
-	}
-
-	public void setAuditingService(AuditingService auditingService) {
-		this.auditingService = auditingService;
 	}
 	
 }

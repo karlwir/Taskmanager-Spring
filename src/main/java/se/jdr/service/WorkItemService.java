@@ -16,8 +16,8 @@ import se.jdr.repository.WorkItemRepository;
 public final class WorkItemService extends BaseService<WorkItem, WorkItemRepository> {
 
 	@Autowired
-	public WorkItemService(WorkItemRepository wr, ServiceManager sm, ServiceTransaction st) {
-		super(wr, sm, st);
+	public WorkItemService(WorkItemRepository wr, ServiceTransaction st) {
+		super(wr, st);
 	}
 
 	public WorkItem createWorkItem(String title, String description) throws ServiceException {
