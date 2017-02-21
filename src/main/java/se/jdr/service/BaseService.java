@@ -23,19 +23,7 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 		this.repository = repository;
 		this.serviceTransaction = serviceTransaction;
 	}
-	
-	protected void setServices(UserService userService, 
-							   WorkItemService workItemService, 
-							   IssueService issueService, 
-							   TeamService teamService, 
-							   AuditingService auditingService) {
-		this.userService = userService;
-		this.workItemService = workItemService;
-		this.issueService = issueService;
-		this.teamService = teamService;
-		this.auditingService = auditingService;
-	}
-	
+
 	protected void setUserService(UserService userService){
 		this.userService = userService;
 	}
