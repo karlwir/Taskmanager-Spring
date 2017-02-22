@@ -1,9 +1,12 @@
 package se.jdr.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
 
@@ -29,13 +32,18 @@ class AuditingService {
 	private AuditReader getReader() {
 		return AuditReaderFactory.get(entityManager);
 	}
+	
+	private Long toEpochMillis(LocalDateTime time) {
+		return time.toEpochSecond(ZoneId.systemDefault().getRules().getOffset(time))*1000;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Set<Long> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) {
 		 List<WorkItem> workItems = getReader().createQuery()
 											   .forRevisionsOfEntity(WorkItem.class, true, false)
 											   .add(AuditEntity.property("status").eq(Status.DONE))
-											   .add((AuditEntity.property("revisionDate").between(from, to)))
+											   .add(AuditEntity.property("status_MOD").eq(true))
+											   .add(AuditEntity.revisionProperty("timestamp").between(toEpochMillis(from), toEpochMillis(to)))
 											   .getResultList();
 		 
 		 Set<Long> ids = new HashSet<>();

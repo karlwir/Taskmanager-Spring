@@ -47,14 +47,17 @@ public class Taskmanager {
 //			 Team team = teamService.createTeam("teammmmmmmmmmmm");
 //			 teamService.addUserToTeam(user, team);
 ////
-			WorkItem workItem = workItemService.createWorkItem("workitem1", "workitem1 description");
+//			WorkItem workItem = workItemService.createWorkItem("workitem1", "workitem1 description");
 //			workItemService.createWorkItem("workitem2", "workitem2 description");
 //			workItemService.createWorkItem("workitem3", "workitem3 description");
 
-			workItemService.updateStatus(workItem, Status.DONE);
+
+			//			workItemService.updateTitle(workItemService.getById(8L), "newtitle5");
+			workItemService.updateStatus(workItemService.getById(4L), Status.UNSTARTED);
+			workItemService.updateStatus(workItemService.getById(4L), Status.DONE);
 			
 			System.out.println(
-					workItemService.getDoneWorkItemsByDate(LocalDateTime.now().minusSeconds(10), LocalDateTime.now())
+					workItemService.getDoneWorkItemsByDate(LocalDateTime.now().minusSeconds(2), LocalDateTime.now().plusSeconds(1))
 			);
 
 		};

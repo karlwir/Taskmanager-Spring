@@ -17,7 +17,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Audited
+@Audited(withModifiedFlag=true)
 @Table(name = "workitems")
 public class WorkItem extends AbstractEntity {
 
