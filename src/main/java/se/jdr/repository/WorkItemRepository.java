@@ -18,7 +18,10 @@ public interface WorkItemRepository extends PagingAndSortingRepository<WorkItem,
 	@Query("Select wi from #{#entityName} wi where wi.user.id = :userId and wi.status != 'ARCHIVED'")
 	public Collection<WorkItem> findByUserId(@Param("userId") Long userId);
 
-	@Query("Select wi from #{#entityName} wi where wi.description Like :desc and wi.status != 'ARCHIVED'")
+	@Query("Select wi from #{#entityName} wi where wi.title like %:title% and wi.status != 'ARCHIVED'")
+	public Collection<WorkItem> findByDTitle(@Param("title") String title);
+
+	@Query("Select wi from #{#entityName} wi where wi.description like %:desc% and wi.status != 'ARCHIVED'")
 	public Collection<WorkItem> findByDescription(@Param("desc") String description);
 
 	@Query("select workItem from Issue i WHERE i.openIssue=1 and i.workItem.status != 'ARCHIVED'")

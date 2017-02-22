@@ -118,11 +118,8 @@ public class User extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", firstname=" + firstname + ", lastname="
-				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate + ", createdBy=" + createdBy
-				+ ", modifiedBy=" + revisionBy + "]";
+		return "User [username=" + username + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate ;
 	}
-
-	
 
 }

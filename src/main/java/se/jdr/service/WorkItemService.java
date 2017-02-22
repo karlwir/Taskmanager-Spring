@@ -61,24 +61,28 @@ public final class WorkItemService extends BaseService<WorkItem, WorkItemReposit
 		}
 	}
 
-	public Collection<WorkItem> getWorkItemsByStatus(WorkItem.Status status) throws ServiceException {
+	public Collection<WorkItem> getByStatus(WorkItem.Status status) throws ServiceException {
 		return execute(() -> repository.findByStatus(status));
 	}
 
-	public Collection<WorkItem> getWorkItemsByTeam(Long teamId) throws ServiceException {
+	public Collection<WorkItem> getByTeam(Long teamId) throws ServiceException {
 		return execute(() -> repository.getWorkItemsByTeamId(teamId));
 	}
 
-	public Collection<WorkItem> getWorkItemsByUser(User user) throws ServiceException {
+	public Collection<WorkItem> getByUser(User user) throws ServiceException {
 		return execute(() -> repository.findByUserId(user.getId()));
 	}
 
-	public Collection<WorkItem> getWorkItemsWithIssues() throws ServiceException {
+	public Collection<WorkItem> getWithIssues() throws ServiceException {
 		return execute(() -> repository.getAllWorkItemsWithIssues());
 	}
-
-	public Collection<WorkItem> getWorkItemByDescripton(String description) throws ServiceException {
+	
+	public Collection<WorkItem> getByDescription(String description) throws ServiceException {
 		return execute(() -> repository.findByDescription(description));
+	}
+
+	public Collection<WorkItem> getByTitle(String title) throws ServiceException {
+		return execute(() -> repository.findByDescription(title));
 	}
 	
 	public Collection<WorkItem> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) throws ServiceException {

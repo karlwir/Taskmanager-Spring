@@ -54,7 +54,7 @@ public class LoginService implements AuditorAware<User> {
 			} finally {			
 			}
 		}
-		input.close();	
+//		input.close();	
 		return serviceManager;
 	}
 

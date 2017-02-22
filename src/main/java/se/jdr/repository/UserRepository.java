@@ -12,7 +12,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
 	User findUserByUserId(String userId);
 
-	@Query("select u from #{#entityName} u where u.firstname like :fName and u.lastname like :lName and u.username like :uName")
+	@Query("select u from #{#entityName} u where u.firstname like %:fName% and u.lastname like %:lName% and u.username like %:uName%")
 	Collection<User> getUser(@Param("fName") String firstname, @Param("lName") String lastname,
 			@Param("uName") String username);
 

@@ -20,24 +20,14 @@ public class UserService extends BaseService<User, UserRepository> {
 		super(ur, st);
 	}
 
-	public User createUser(String username, String firstname, String lastname, String password) throws ServiceException {
-		if (isValidUsername(username)) {
-			return execute(() -> repository.save(new User(username, firstname, lastname, createHash(password))));
-		} else {
-			throw new ServiceException("Username is too short!");
-		}
+	public User createUser(String firstname, String lastname, String password) throws ServiceException {
+			return execute(() -> repository.save(new User(generateUsername(firstname, lastname), firstname, lastname, generateHash(password))));
 	}
 
 	public User updateFirstName(User user, String firstname) throws ServiceException {
 		return execute(() -> {
 			user.setFirstName(firstname);
 			return repository.save(user);
-		});
-	}
-
-	public User updateFirstName(Long id, String firstname) throws ServiceException {
-		return execute(() -> {
-			return repository.save(repository.findOne(id).setFirstName(firstname));
 		});
 	}
 
@@ -61,7 +51,7 @@ public class UserService extends BaseService<User, UserRepository> {
 
 	public User updateStatusInactive(User user) throws ServiceException {
 		return transaction(() -> {
-			for (WorkItem workitem : workItemService.getWorkItemsByUser(user)) {
+			for (WorkItem workitem : workItemService.getByUser(user)) {
 				workItemService.updateStatus(workitem, Status.UNSTARTED);
 			}
 			user.setActiveUser(false);
@@ -111,9 +101,39 @@ public class UserService extends BaseService<User, UserRepository> {
 	private static boolean isValidUsername(String username) {
 		return username.length() >= 6;
 	}
-	
-	private String createHash(String password) {
+
+	private String generateHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
+	}
+
+	private String generateUsername(String firstName, String lastName) throws ServiceException {
+		String userNameFirst = firstName.substring(0, 2).toLowerCase();
+		String userNameSecond = lastName.substring(0, 2).toLowerCase();
+		String userName = null;
+
+		for (Integer i = 1; i <= 100; i++) {
+			if (i < 10) {
+				userName = userNameFirst + userNameSecond + "0" + i.toString();
+
+				if (getByUsername(userName) == null) {
+					break;
+				} else {
+					continue;
+				}
+			} else if (i < 100) {
+				userName = userNameFirst + userNameSecond + i.toString();
+
+				if (getByUsername(userName) == null) {
+					break;
+				} else {
+					continue;
+				}
+			} else {
+				throw new ServiceException("No available username for : " + firstName + lastName);
+			}
+		}
+
+		return userName;
 	}
 
 }
