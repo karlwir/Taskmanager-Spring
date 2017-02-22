@@ -32,7 +32,7 @@ public class UserRepositoryTest {
     private String userName = "Robbe";
     private String firstName = "Robert";
     private String lastName = "Savela";
-    private User user = new User(userName, firstName, lastName);
+    private User user = new User(userName, firstName, lastName, "fakehash");
 
     @Test
     public void canGetUser() throws ServiceException {

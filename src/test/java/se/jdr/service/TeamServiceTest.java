@@ -34,7 +34,7 @@ public class TeamServiceTest extends AbstractTest {
 	TeamRepository teamRepository;
 
 
-	User user = new User("Robertasdasdasd", "roberts", "Hello");
+	User user = new User("Robertasdasdasd", "roberts", "Hello", "fakehash");
 	Team team = new Team("Team");
 
 

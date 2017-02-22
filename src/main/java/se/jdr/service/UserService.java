@@ -3,6 +3,7 @@ package se.jdr.service;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import se.jdr.model.Team;
@@ -19,9 +20,9 @@ public class UserService extends BaseService<User, UserRepository> {
 		super(ur, st);
 	}
 
-	public User createUser(String username, String firstname, String lastname) throws ServiceException {
+	public User createUser(String username, String firstname, String lastname, String password) throws ServiceException {
 		if (isValidUsername(username)) {
-			return execute(() -> repository.save(new User(username, firstname, lastname)));
+			return execute(() -> repository.save(new User(username, firstname, lastname, createHash(password))));
 		} else {
 			throw new ServiceException("Username is too short!");
 		}
@@ -94,20 +95,25 @@ public class UserService extends BaseService<User, UserRepository> {
 		return execute(() -> repository.getUser(firstname, lastname, username));
 	}
 
-	public Collection<User> getUserByFirstname(String firstname) throws ServiceException {
+	public Collection<User> getByFirstname(String firstname) throws ServiceException {
 		return getUser(firstname, "%", "%");
 	}
 
-	public Collection<User> getUserByLastname(String lastname) throws ServiceException {
+	public Collection<User> getByLastname(String lastname) throws ServiceException {
 		return getUser("%", lastname, "%");
 	}
 
-	public Collection<User> getUserByUsername(String username) throws ServiceException {
-		return getUser("%", "%", username);
+	public User getByUsername(String username) throws ServiceException {
+		Collection<User> usersByUsername = getUser("%", "%", username);
+		return (usersByUsername.iterator().hasNext()) ? usersByUsername.iterator().next() : null;
 	}
 
 	private static boolean isValidUsername(String username) {
-		return username.length() >= 10;
+		return username.length() >= 6;
+	}
+	
+	private String createHash(String password) {
+		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 
 }

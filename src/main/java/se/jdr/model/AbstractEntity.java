@@ -6,6 +6,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,10 +33,12 @@ public abstract class AbstractEntity {
 	protected LocalDateTime revisionDate;
 	
 	@CreatedBy
-	protected String createdBy;
+	@OneToOne
+	protected User createdBy;
 	
 	@LastModifiedBy
-	protected String revisionBy;
+	@OneToOne
+	protected User revisionBy;
 
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
@@ -45,11 +48,11 @@ public abstract class AbstractEntity {
 		return revisionDate;
 	}
 
-	public String getCreatedBy() {
+	public User getCreatedBy() {
 		return createdBy;
 	}
 
-	public String getModifiedBy() {
+	public User getModifiedBy() {
 		return revisionBy;
 	}
 
@@ -61,11 +64,11 @@ public abstract class AbstractEntity {
 		this.revisionDate = modifiedDate;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(User modifiedBy) {
 		this.revisionBy = modifiedBy;
 	}
 }

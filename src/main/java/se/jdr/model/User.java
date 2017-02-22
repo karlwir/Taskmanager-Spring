@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
@@ -30,6 +31,9 @@ public class User extends AbstractEntity {
 	
 	@Column(nullable = false)
 	private String lastname;
+
+	@Column(nullable = false)
+	private String passwordHash;
 	
 	@Column(nullable = false)
 	private boolean activeUser;
@@ -45,15 +49,17 @@ public class User extends AbstractEntity {
 	@LastModifiedDate
 	protected LocalDateTime revisionDate;
 	@LastModifiedBy
-	protected String revisionBy;
+	@OneToOne
+	protected User revisionBy;
 	
 	protected User() {
 	}
 
-	public User(String username, String firstname, String lastname) {
+	public User(String username, String firstname, String lastname, String passwordHash) {
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.passwordHash = passwordHash;
 		this.activeUser = true;
 	}
 
@@ -79,6 +85,10 @@ public class User extends AbstractEntity {
 
 	public String getUserId() {
 		return userId;
+	}
+	
+	public String getPasswordHash() {
+		return passwordHash;
 	}
 
 	public User setFirstName(String firstname) {

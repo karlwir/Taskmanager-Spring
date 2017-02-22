@@ -16,7 +16,7 @@ public class ServiceManager {
 	private ArrayList<BaseService<?,?>> services = new ArrayList<>();
 	
 	@Autowired
-	public ServiceManager(UserService userService, WorkItemService workItemService, IssueService issueService,
+	ServiceManager(UserService userService, WorkItemService workItemService, IssueService issueService,
 			TeamService teamService, AuditingService auditingService) {
 		this.userService = userService;
 		this.workItemService = workItemService;

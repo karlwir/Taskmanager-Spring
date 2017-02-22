@@ -9,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
@@ -40,7 +41,8 @@ public class WorkItem extends AbstractEntity {
 	@LastModifiedDate
 	protected LocalDateTime revisionDate;
 	@LastModifiedBy
-	protected String revisionBy;
+	@OneToOne
+	protected User revisionBy;
 
 	protected WorkItem() {
 	}
