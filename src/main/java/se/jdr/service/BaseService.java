@@ -79,4 +79,8 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 	public Page<E> getAll(int page) throws ServiceException {
 		return getAll(page, 10);
 	}
+
+	public Page<E> getAll(Pageable pageable) throws ServiceException {
+		return getAll(pageable.getPageNumber(), pageable.getPageSize());
+	}
 }

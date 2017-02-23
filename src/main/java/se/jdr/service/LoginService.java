@@ -25,6 +25,7 @@ public class LoginService implements AuditorAware<User> {
 	}
 
 	public ServiceManager login() {
+		user = null;
 		ServiceManager serviceManager = context.getBean(ServiceManager.class);
 		System.out.println("Enter username: ");
 		while (user == null) {

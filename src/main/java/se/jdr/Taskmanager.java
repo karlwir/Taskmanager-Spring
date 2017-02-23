@@ -1,7 +1,9 @@
 package se.jdr;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.boot.CommandLineRunner;
@@ -9,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
@@ -21,14 +24,16 @@ import se.jdr.service.WorkItemService;
 
 @SpringBootApplication
 public class Taskmanager {
-	
+
+	private User auditor;
 	private Scanner scanner;
 	private String input;
 	private User selectedUser = null;
 	private Collection<User> userCollection;
+	private Page<User> userPage;
+	private boolean viewNextPage = false;
 	private WorkItem selectedWorkItem = null;
 	private Collection<WorkItem> workItemCollection;
-
 
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
@@ -39,7 +44,7 @@ public class Taskmanager {
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(Taskmanager.class, args);
 	}
@@ -47,22 +52,29 @@ public class Taskmanager {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			print(" _______ _______ _______ __  __ _______\n|_     _|   _   |     __|  |/  |   |   | _____ _____ _____ _____ _____ ____\n  |   | |       |__     |     <|       ||  _  |     |  _  |  _  |  -__|   _|\n  |___| |___|___|_______|__|\\__|__|_|__||___._|__|__|___._|___  |_____|__|\n                                                          |_____|");
-			LoginService loginService = context.getBean(LoginService.class);
-			
-			ServiceManager serviceManager = loginService.login();
-			
-			mainMenu(serviceManager);
+			while (true) {
+				print(" _______ _______ _______ __  __ _______\n|_     _|   _   |     __|  |/  |   |   | _____ _____ _____ _____ _____ ____\n  |   | |       |__     |     <|       ||  _  |     |  _  |  _  |  -__|   _|\n  |___| |___|___|_______|__|\\__|__|_|__||___._|__|__|___._|___  |_____|__|\n                                                          |_____|");
+				LoginService loginService = context.getBean(LoginService.class);
+
+				ServiceManager serviceManager = loginService.login();
+				auditor = loginService.getCurrentAuditor();
+				print("\nLogged in as " + ANSI_CYAN + auditor.getFirstname() + " " + auditor.getLastname() + ANSI_RESET
+						+ ". You have " + ANSI_CYAN + serviceManager.getWorkItemService().getByUser(auditor).size()
+						+ ANSI_RESET + " assigned workitems.");
+				mainMenu(serviceManager);
+				serviceManager = null;
+			}
 		};
 	}
-	
-	private void mainMenu(ServiceManager serviceManager) throws ServiceException{
+
+	private void mainMenu(ServiceManager serviceManager) throws ServiceException {
 		boolean exit = false;
-		
+
 		while (!exit) {
 			printSelected();
-			
-			switch (inputString("Main menu - Choose data type: \n " + ANSI_CYAN + " (1) User, (2) Workitem, (0) Deselect all, (exit) Exit" + ANSI_RESET)) {
+
+			switch (inputString("\n" + "Main menu - Choose data type: \n " + ANSI_CYAN
+					+ " (1) User, (2) Workitem, (0) Deselect all, (logout) Logout" + ANSI_RESET)) {
 			case "1":
 				userMenu(serviceManager.getUserService());
 				break;
@@ -73,7 +85,7 @@ public class Taskmanager {
 				selectedUser = null;
 				selectedWorkItem = null;
 				break;
-			case "exit":
+			case "logout":
 				exit = true;
 				break;
 			default:
@@ -85,125 +97,80 @@ public class Taskmanager {
 
 	private void workItemMenu(WorkItemService workItemService) throws ServiceException {
 		boolean exit = false;
-		
-		while (!exit) {
-			printSelected();
-			switch (inputString("Workitem - Choose action: \n " + ANSI_CYAN + " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (back) Back " + ANSI_RESET)) {
-			case "1":
-				print("Add Workitem:");
-				workItemService.createWorkItem(inputString("Title: "), inputString("Description: "));
-				break;
-			case "2":
-				switch (inputString("Find Workitem: \n (1) By title, (2) By description, (3) By User (back) Back")) {				
-					case "1":
-						workItemCollection = workItemService.getByTitle(inputString("Title: "));
-						selectedWorkItem = selectFromCollection(workItemCollection);
-						break;
-					case "2":
-						workItemCollection = workItemService.getByDescription(inputString("Description: "));
-						selectedWorkItem = selectFromCollection(workItemCollection);
-						break;
-					case "3":
-						if(selectedUser == null) {print("No user selected"); break; }
-						workItemCollection = workItemService.getByUser(selectedUser);
-						selectedWorkItem = selectFromCollection(workItemCollection);
-						break;
-					case "back":
-						exit = true;
-						break;
-					default:
-						print("Invalid command");
-						break;
-				}
-				break;
-			case "3":
-				if(selectedWorkItem == null) {print("No Workitem selected for update"); break; }
-				switch (inputString("Update Workitem: \n " + ANSI_CYAN + " (1) Update title, (2) Update description, (3) Update status DONE, (4) Assign User, (back) Back" + ANSI_RESET)) {				
-					case "1":
-						workItemService.updateTitle(selectedWorkItem, inputString("New Title: "));
-						break;
-					case "2":
-						workItemService.updateDescription(selectedWorkItem, inputString("New Description: "));
-						break;
-					case "3":
-						workItemService.updateStatus(selectedWorkItem, Status.DONE);
-						break;
-					case "4":
-						if(selectedUser == null) {print("No user selected"); break; }
-						workItemService.addUserToWorkItem(selectedWorkItem, selectedUser);
-						break;
-					case "back":
-						exit = true;
-						break;
-					default:
-						print("Invalid command");
-						break;
-				}				
-			break;
-			case "back":
-				exit = true;
-				break;
-			default:
-				print("Invalid command");
-				break;
-			}
-		}		
-	}
 
-	private void userMenu(UserService userService) throws ServiceException {
-		boolean exit = false;
-		
 		while (!exit) {
 			printSelected();
-			switch (inputString("User - Choose action: \n " + ANSI_CYAN + " (1) Add User, (2) Find User, (3) Update User, (back) Back " + ANSI_RESET)) {
+			switch (inputString("\n" + "Workitem - Choose action: \n " + ANSI_CYAN
+					+ " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (back) Back " + ANSI_RESET)) {
 			case "1":
-				print("Add user:");
-				userService.createUser(inputString("Firstname: "), inputString("Lastname: "), inputString("Password: "));
+				print("\n" + "Add Workitem:");
+				selectedWorkItem = workItemService.createWorkItem(inputString("Title: "), inputString("Description: "));
 				break;
 			case "2":
-				switch (inputString("Find User: \n" + ANSI_CYAN + " (1) By firstname, (2) By lastname, (3) By username" + ANSI_RESET)) {				
-					case "1":
-						userCollection = userService.getByFirstname(inputString("Firstname: "));
-						selectedUser = selectFromCollection(userCollection);
+				switch (inputString("\n" + "Find Workitem: \n  " + ANSI_CYAN
+						+ " (1) By title, (2) By description, (3) By User, (4) DONE past hour, (back) Back"
+						+ ANSI_RESET)) {
+				case "1":
+					workItemCollection = workItemService.getByTitle(inputString("Title: "));
+					selectedWorkItem = selectFromCollection(workItemCollection);
+					break;
+				case "2":
+					workItemCollection = workItemService.getByDescription(inputString("Description: "));
+					selectedWorkItem = selectFromCollection(workItemCollection);
+					break;
+				case "3":
+					if (selectedUser == null) {
+						print("No user selected");
 						break;
-					case "2":
-						userCollection = userService.getByLastname(inputString("Lastname: "));
-						selectedUser = selectFromCollection(userCollection);
-						break;
-					case "3":
-						selectedUser = userService.getByUsername(inputString("Username: "));
-						break;
-					case "back":
-						exit = true;
-						break;
-					default:
-						print("Invalid command");
-						break;
+					}
+					workItemCollection = workItemService.getByUser(selectedUser);
+					selectedWorkItem = selectFromCollection(workItemCollection);
+					break;
+				case "4":
+					workItemCollection = workItemService.getDoneWorkItemsByDate(LocalDateTime.now().minusHours(1),
+							LocalDateTime.now());
+					selectedWorkItem = selectFromCollection(workItemCollection);
+					break;
+				case "back":
+					exit = true;
+					break;
+				default:
+					print("Invalid command");
+					break;
 				}
 				break;
 			case "3":
-				if(selectedUser == null) {print("No user selected for update"); break; }
-				switch (inputString("Update User: \n" + ANSI_CYAN + "(1) Update firstname, (2) Update lastname, (3) Inactivate User, (4) Activate User, (back) Back" + ANSI_RESET)) {				
-					case "1":
-						userService.updateFirstName(selectedUser, inputString("New firstname: "));
+				if (selectedWorkItem == null) {
+					print("No Workitem selected for update");
+					break;
+				}
+				switch (inputString("\n" + "Update Workitem: \n " + ANSI_CYAN
+						+ " (1) Update title, (2) Update description, (3) Update status DONE, (4) Assign User, (back) Back"
+						+ ANSI_RESET)) {
+				case "1":
+					workItemService.updateTitle(selectedWorkItem, inputString("New Title: "));
+					break;
+				case "2":
+					workItemService.updateDescription(selectedWorkItem, inputString("New Description: "));
+					break;
+				case "3":
+					workItemService.updateStatus(selectedWorkItem, Status.DONE);
+					break;
+				case "4":
+					if (selectedUser == null) {
+						print("No user selected");
 						break;
-					case "2":
-						userService.updateLastName(selectedUser, inputString("New lastname: "));
-						break;
-					case "3":
-						userService.updateStatusInactive(selectedUser);
-						break;
-					case "4":
-						userService.updateStatusActive(selectedUser);
-						break;
-					case "back":
-						exit = true;
-						break;
-					default:
-						print("Invalid command");
-						break;
-				}				
-			break;
+					}
+					workItemService.addUserToWorkItem(selectedWorkItem, selectedUser);
+					break;
+				case "back":
+					exit = true;
+					break;
+				default:
+					print("Invalid command");
+					break;
+				}
+				break;
 			case "back":
 				exit = true;
 				break;
@@ -214,25 +181,136 @@ public class Taskmanager {
 		}
 	}
 
+	private void userMenu(UserService userService) throws ServiceException {
+		boolean exit = false;
+
+		while (!exit) {
+			printSelected();
+			switch (inputString("\n" + "User - Choose action: \n " + ANSI_CYAN
+					+ " (1) Add User, (2) Find User, (3) Update User, (back) Back " + ANSI_RESET)) {
+			case "1":
+				print("\n" + "Add user:");
+				selectedUser = userService.createUser(inputString("Firstname: "), inputString("Lastname: "),
+						inputString("Password: "));
+				break;
+			case "2":
+				switch (inputString("\n" + "Find User: \n" + ANSI_CYAN
+						+ " (1) By firstname, (2) By lastname, (3) By username, (4) Get all" + ANSI_RESET)) {
+				case "1":
+					userCollection = userService.getByFirstname(inputString("Firstname: "));
+					selectedUser = selectFromCollection(userCollection);
+					break;
+				case "2":
+					userCollection = userService.getByLastname(inputString("Lastname: "));
+					selectedUser = selectFromCollection(userCollection);
+					break;
+				case "3":
+					selectedUser = userService.getByUsername(inputString("Username: "));
+					break;
+				case "4":
+					viewNextPage = false;
+					userPage = userService.getAll(0);
+					selectedUser = selectFromPage(userPage);
+					while(viewNextPage) {
+						Page<User> previous = userPage;
+						userPage = userService.getAll(previous.nextPageable());
+						viewNextPage = false;
+						selectedUser = selectFromPage(userPage);
+					}
+					break;
+				case "back":
+					exit = true;
+					break;
+				default:
+					print("Invalid command");
+					break;
+				}
+				break;
+			case "3":
+				if (selectedUser == null) {
+					print("No user selected for update");
+					break;
+				}
+				switch (inputString("\n" + "Update User: \n" + ANSI_CYAN
+						+ "(1) Update firstname, (2) Update lastname, (3) Inactivate User, (4) Activate User, (5) Update username, (back) Back"
+						+ ANSI_RESET)) {
+				case "1":
+					userService.updateFirstName(selectedUser, inputString("New firstname: "));
+					break;
+				case "2":
+					userService.updateLastName(selectedUser, inputString("New lastname: "));
+					break;
+				case "3":
+					userService.updateStatusInactive(selectedUser);
+					break;
+				case "4":
+					userService.updateStatusActive(selectedUser);
+					break;
+				case "5":
+					userService.updateUsername(selectedUser);
+					break;
+				case "back":
+					exit = true;
+					break;
+				default:
+					print("Invalid command");
+					break;
+				}
+				break;
+			case "back":
+				exit = true;
+				break;
+			default:
+				print("Invalid command");
+				break;
+			}
+		}
+	}
+
+	private <T> T selectFromPage(Page<T> page) {
+		if (page.getSize() == 0) {
+			print("No result");
+			return null;
+		}
+		List<T> list = page.getContent();
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(ANSI_CYAN + "(" + (i + 1) + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
+		}
+		if(page.hasNext()){
+			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET + " Next page with " + ANSI_CYAN + "(11)" + ANSI_RESET);			
+		} else {
+			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET);			
+		}
+		scanner = new Scanner(System.in);
+		int command = scanner.nextInt();
+		if (command == 11 && page.hasNext()) {
+			viewNextPage = true;
+			return null;
+		} else if(command > list.size() || command == 0) {
+			return null;
+		} else {
+			return list.get(command - 1);			
+		}
+	}
+
 	private <T> T selectFromCollection(Collection<T> collection) {
-		if(collection.size() == 0) {
+		if (collection.size() == 0) {
 			print("No result");
 			return null;
 		}
 		ArrayList<T> list = new ArrayList<>();
 		list.addAll(collection);
-		for(int i = 0; i < list.size(); i++) {
-			System.out.println(ANSI_CYAN + "(" + i + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(ANSI_CYAN + "(" + (i + 1) + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
 		}
-		print("Select with " + ANSI_CYAN + "(#)"  + ANSI_RESET +  ":");
+		print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET);
 		scanner = new Scanner(System.in);
 		int command = scanner.nextInt();
-		if(command > list.size()) {
+		if (command > list.size() || command == 0) {
 			return null;
 		}
-		return list.get(command);
+		return list.get(command - 1);
 	}
-	
 
 	private String inputString(String helper) {
 		print(helper);
@@ -240,14 +318,18 @@ public class Taskmanager {
 		input = scanner.nextLine();
 		return input;
 	}
-	
+
 	private void print(String message) {
 		System.out.println(message);
 	}
-	
+
 	private void printSelected() {
-		if(selectedUser != null){print("* User " + selectedUser.getUsername().toString() + " is selected.");}
-		if(selectedWorkItem != null){print("* Workitem '" + selectedWorkItem.getTitle().toString() + "' is selected.");}	
+		if (selectedUser != null) {
+			print("* User " + selectedUser.getUsername().toString() + " is selected.");
+		}
+		if (selectedWorkItem != null) {
+			print("* Workitem '" + selectedWorkItem.getTitle().toString() + "' is selected.");
+		}
 	}
 
 }
