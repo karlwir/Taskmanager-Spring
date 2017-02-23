@@ -121,5 +121,14 @@ public class User extends AbstractEntity {
 		return "User [username=" + username + ", firstname=" + firstname + ", lastname="
 				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate ;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other != null && other instanceof User) {
+			User otherUser = (User) other;
+			return this.getId() == otherUser.getId();
+		}
+		return false;
+	}
 
 }

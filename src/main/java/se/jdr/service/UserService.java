@@ -38,15 +38,11 @@ public class UserService extends BaseService<User, UserRepository> {
 		});
 	}
 
-	public User updateUsername(User user, String username) throws ServiceException {
-		if (isValidUsername(username)) {
+	public User updateUsername(User user) throws ServiceException {
 			return execute(() -> {
-				user.setUsername(username);
+				user.setUsername(generateUsername(user.getFirstname(), user.getLastname()));
 				return repository.save(user);
 			});
-		} else {
-			throw new ServiceException("Username is too short!");
-		}
 	}
 
 	public User updateStatusInactive(User user) throws ServiceException {

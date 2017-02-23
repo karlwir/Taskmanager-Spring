@@ -64,6 +64,10 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 	    return new PageRequest(page, size);
 	}
 	
+	public E refreshEntity(E entity) throws ServiceException {
+		return execute(() -> repository.findOne(entity.getId()));
+	}
+	
 	public E getById(Long id) throws ServiceException {
 		return execute(() -> repository.findOne(id));
 	}

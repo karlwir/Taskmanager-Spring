@@ -2,9 +2,7 @@ package se.jdr.service;
 
 import static org.mockito.Mockito.when;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,9 +14,6 @@ import se.jdr.repository.IssueRepository;
 import se.jdr.repository.WorkItemRepository;
 
 public class IssueServiceTest extends AbstractTest {
-
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Autowired
 	IssueService issueService;
