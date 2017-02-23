@@ -71,4 +71,5 @@ public abstract class AbstractEntity {
 	public void setModifiedBy(User modifiedBy) {
 		this.revisionBy = modifiedBy;
 	}
+
 }

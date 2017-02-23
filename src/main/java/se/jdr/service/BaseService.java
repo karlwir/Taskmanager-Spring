@@ -1,5 +1,7 @@
 package se.jdr.service;
 
+import java.util.Collection;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import se.jdr.model.AbstractEntity;
+import se.jdr.model.User;
 import se.jdr.service.ServiceTransaction.Action;
 
 abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingRepository<E, Long>> {
@@ -82,5 +85,9 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 
 	public Page<E> getAll(Pageable pageable) throws ServiceException {
 		return getAll(pageable.getPageNumber(), pageable.getPageSize());
+	}
+
+	public Collection<E> getRevisions(E entity) throws ServiceException {
+		return execute(() -> auditingService.getRevisions(entity));
 	}
 }

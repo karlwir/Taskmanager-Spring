@@ -101,7 +101,7 @@ public class Taskmanager {
 		while (!exit) {
 			printSelected();
 			switch (inputString("\n" + "Workitem - Choose action: \n " + ANSI_CYAN
-					+ " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (back) Back " + ANSI_RESET)) {
+					+ " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (4) View revisions, (back) Back " + ANSI_RESET)) {
 			case "1":
 				print("\n" + "Add Workitem:");
 				selectedWorkItem = workItemService.createWorkItem(inputString("Title: "), inputString("Description: "));
@@ -171,6 +171,14 @@ public class Taskmanager {
 					break;
 				}
 				break;
+			case "4":
+				if (selectedWorkItem == null) {
+					print("No WorkItem selected for revisions");
+					break;
+				}
+				workItemCollection = workItemService.getRevisions(selectedWorkItem);
+				selectFromCollection(workItemCollection);
+				break;
 			case "back":
 				exit = true;
 				break;
@@ -187,7 +195,7 @@ public class Taskmanager {
 		while (!exit) {
 			printSelected();
 			switch (inputString("\n" + "User - Choose action: \n " + ANSI_CYAN
-					+ " (1) Add User, (2) Find User, (3) Update User, (back) Back " + ANSI_RESET)) {
+					+ " (1) Add User, (2) Find User, (3) Update User, (4) View revisions (back) Back " + ANSI_RESET)) {
 			case "1":
 				print("\n" + "Add user:");
 				selectedUser = userService.createUser(inputString("Firstname: "), inputString("Lastname: "),
@@ -256,6 +264,14 @@ public class Taskmanager {
 					print("Invalid command");
 					break;
 				}
+				break;
+			case "4":
+				if (selectedUser == null) {
+					print("No user selected for revisions");
+					break;
+				}
+				userCollection = userService.getRevisions(selectedUser);
+				selectFromCollection(userCollection);
 				break;
 			case "back":
 				exit = true;

@@ -68,6 +68,10 @@ public class WorkItem extends AbstractEntity {
 	public User getUser() {
 		return user;
 	}
+	
+	public boolean hasAssignUser() {
+		return user != null;
+	}
 
 	public Collection<Issue> getIssues() {
 		return issues;
@@ -76,11 +80,26 @@ public class WorkItem extends AbstractEntity {
 	public enum Status {
 		DONE, UNSTARTED, STARTED, ARCHIVED
 	}
+	
+	private boolean hasCreatedBy(){
+		return createdBy != null;
+	}
+	
+	private boolean hasRevisionBy() {
+		return revisionBy != null;
+	}
 
 	@Override
 	public String toString() {
-		return "Workitem " + getId() + ", title: " + title + ", description: " + description + ", status: " + status
-				+ ", assignedUserId: " + user;
+		String assignedUser = hasAssignUser() ? user.getUsername() : null;
+		String createdBy = hasCreatedBy() ? this.createdBy.getUsername() : null;
+		String revisionBy = hasRevisionBy() ? this.revisionBy.getUsername() : null;
+		return "Workitem, title: " + title 
+						+ ", description: " + description 
+						+ ", status: " + status 
+						+ ", assignedUserId: " + assignedUser 
+						+ ", createdBy: " + createdBy + " - " + createdDate 
+						+ ", revisionBy: " + revisionBy + " - " + revisionDate;
 	}
 
 	public WorkItem setStatus(Status status) {

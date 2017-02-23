@@ -2,6 +2,7 @@ package se.jdr.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.hibernate.envers.query.AuditEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import se.jdr.model.AbstractEntity;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 
@@ -36,7 +38,7 @@ class AuditingService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<Long> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) {
+	protected Set<Long> getDoneWorkItemsByDate(LocalDateTime from, LocalDateTime to) {
 		 List<WorkItem> workItems = getReader().createQuery()
 											   .forRevisionsOfEntity(WorkItem.class, true, false)
 											   .add(AuditEntity.property("status").eq(Status.DONE))
@@ -48,4 +50,13 @@ class AuditingService {
 		 workItems.forEach(w -> ids.add(w.getId()));
 		 return ids;
 	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractEntity> Collection<T> getRevisions(T entity) {
+		return  getReader().createQuery()
+						   .forRevisionsOfEntity(entity.getClass(), true, true)
+						   .add(AuditEntity.property("id").eq(entity.getId()))
+						   .getResultList();
+	}
+	
 }

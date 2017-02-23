@@ -116,10 +116,25 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
+	private boolean hasCreatedBy(){
+		return createdBy != null;
+	}
+	
+	private boolean hasRevisionBy() {
+		return revisionBy != null;
+	}
+
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", firstname=" + firstname + ", lastname="
-				+ lastname + ", activeUser=" + activeUser + ", team=" + team + ", createdDate=" + createdDate + ", modifiedDate=" + revisionDate ;
+		String createdBy = hasCreatedBy() ? this.createdBy.getUsername() : null;
+		String revisionBy = hasRevisionBy() ? this.revisionBy.getUsername() : null;
+		return "User, username: " + username 
+					+ ", firstname: " + firstname 
+					+ ", lastname: " + lastname 
+					+ ", activeUser: " + activeUser 
+					+ ", team: " + team 
+					+ ", createdBy: " + createdBy + " - " + createdDate 
+					+ ", revisionBy: " + revisionBy + " - " + revisionDate;
 	}
 	
 	@Override
