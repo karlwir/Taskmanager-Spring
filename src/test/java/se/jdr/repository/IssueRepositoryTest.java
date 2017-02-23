@@ -2,13 +2,13 @@ package se.jdr.repository;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import se.jdr.AbstractTest;
 
 public class IssueRepositoryTest extends AbstractTest {
 
-	@MockBean
+	@Autowired
 	IssueRepository issueRepository;
 
 	@Test

@@ -94,10 +94,6 @@ public class UserService extends BaseService<User, UserRepository> {
 		return (usersByUsername.iterator().hasNext()) ? usersByUsername.iterator().next() : null;
 	}
 
-	private static boolean isValidUsername(String username) {
-		return username.length() >= 6;
-	}
-
 	private String generateHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}

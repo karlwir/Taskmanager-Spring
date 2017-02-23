@@ -19,9 +19,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @TestConfiguration
-//@EnableJpaRepositories("se.jdr.repository")
-//@EnableTransactionManagement
-//@EnableJpaAuditing
+@EnableJpaRepositories("se.jdr.repository")
+@EnableTransactionManagement
+@EnableJpaAuditing
 public class TestConfig {
 
 	@Bean
