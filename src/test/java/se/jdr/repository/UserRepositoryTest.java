@@ -1,18 +1,12 @@
 package se.jdr.repository;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import se.jdr.config.TestConfig;
-import se.jdr.model.Team;
+
+import se.jdr.AbstractTest;
 import se.jdr.model.User;
 import se.jdr.service.ServiceException;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,10 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
-public class UserRepositoryTest {
+public class UserRepositoryTest extends AbstractTest {
 
     @MockBean
     UserRepository userRepository;

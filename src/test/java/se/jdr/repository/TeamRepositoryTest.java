@@ -1,5 +1,8 @@
 package se.jdr.repository;
 
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,11 +16,12 @@ import se.jdr.config.TestConfig;
 @ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class TeamRepositoryTest {
 
-    @MockBean
-    TeamRepository teamRepository;
+	@MockBean
+	TeamRepository teamRepository;
 
-
-
-
+	@Test
+	public void placeHolder() {
+		assertTrue(true);
+	}
 
 }

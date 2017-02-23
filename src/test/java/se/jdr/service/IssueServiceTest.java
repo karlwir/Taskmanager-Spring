@@ -5,16 +5,11 @@ import static org.mockito.Mockito.when;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import se.jdr.AbstractTest;
-import se.jdr.config.TestConfig;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.repository.IssueRepository;
@@ -40,7 +35,7 @@ public class IssueServiceTest extends AbstractTest {
 		when(workItem.getStatus()).thenReturn(Status.STARTED);
 		
 		expectedException.expect(ServiceException.class);
-		expectedException.expectMessage("Invalid work item status");
+		expectedException.expectMessage("Invalid workitem status");
 		
 		issueService.createIssue(workItem, "IssueDescription");
 	}
