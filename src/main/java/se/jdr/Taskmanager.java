@@ -47,7 +47,7 @@ public class Taskmanager {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-
+			print(" _______ _______ _______ __  __ _______\n|_     _|   _   |     __|  |/  |   |   | _____ _____ _____ _____ _____ ____\n  |   | |       |__     |     <|       ||  _  |     |  _  |  _  |  -__|   _|\n  |___| |___|___|_______|__|\\__|__|_|__||___._|__|__|___._|___  |_____|__|\n                                                          |_____|");
 			LoginService loginService = context.getBean(LoginService.class);
 			
 			ServiceManager serviceManager = loginService.login();
