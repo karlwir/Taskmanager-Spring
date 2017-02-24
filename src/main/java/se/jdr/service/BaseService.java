@@ -14,12 +14,12 @@ import se.jdr.service.ServiceTransaction.Action;
 abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingRepository<E, Long>> {
 
 	protected R repository;
-	private ServiceTransaction serviceTransaction;
 	protected UserService userService;
 	protected WorkItemService workItemService;
 	protected TeamService teamService;
 	protected IssueService issueService;
 	protected AuditingService auditingService;
+	private ServiceTransaction serviceTransaction;
 	
 	public BaseService(R repository, ServiceTransaction serviceTransaction) {
 		this.repository = repository;
@@ -68,10 +68,6 @@ abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingR
 	
 	public E refreshEntity(E entity) throws ServiceException {
 		return execute(() -> repository.findOne(entity.getId()));
-	}
-	
-	public E getById(Long id) throws ServiceException {
-		return execute(() -> repository.findOne(id));
 	}
 	
 	public Page<E> getAll(int page, int size) throws ServiceException {

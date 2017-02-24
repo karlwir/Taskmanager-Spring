@@ -14,8 +14,10 @@ import se.jdr.utils.TerminalUI;
 @SpringBootApplication
 public class Taskmanager {
 
+	private LoginService loginService;
+	private ServiceManager serviceManager;
 	private User auditor;
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(Taskmanager.class, args);
 	}
@@ -23,13 +25,10 @@ public class Taskmanager {
 	@Bean
 	public CommandLineRunner run(ApplicationContext context) {
 		return args -> {
-			while (true) {
-				LoginService loginService = context.getBean(LoginService.class);
-				ServiceManager serviceManager = loginService.login();
-				auditor = loginService.getCurrentAuditor();
-				new TerminalUI().mainMenu(serviceManager, auditor);
-				serviceManager = null;
-			}
+			loginService = context.getBean(LoginService.class);
+			serviceManager = loginService.login();
+			auditor = loginService.getCurrentAuditor();
+			new TerminalUI().mainMenu(serviceManager, auditor);
 		};
 	}
 
