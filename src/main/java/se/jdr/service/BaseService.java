@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import se.jdr.model.AbstractEntity;
-import se.jdr.model.User;
 import se.jdr.service.ServiceTransaction.Action;
 
 abstract class BaseService<E extends AbstractEntity, R extends PagingAndSortingRepository<E, Long>> {
