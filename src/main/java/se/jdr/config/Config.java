@@ -1,6 +1,5 @@
 package se.jdr.config;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -58,11 +57,6 @@ public class Config {
 								  "org.springframework.data.jpa.convert.threeten");
 
 		return factory;
-	}
-	
-	@Bean
-	EntityManager entityManager() {
-		return entityManagerFactory().getObject().createEntityManager();
 	}
 
 }

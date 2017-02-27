@@ -52,7 +52,7 @@ public final class TeamService extends BaseService<Team, TeamRepository> {
 	}
 
 	private boolean isValidTeamSize(Team team) throws ServiceException {
-		return execute(() -> userService.getUsersByTeamId(team.getId()).size() < 10);
+		return execute(() -> userService.countByTeamId(team.getId()) < 10);
 	}
 
 }

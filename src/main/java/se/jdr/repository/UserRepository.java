@@ -1,7 +1,7 @@
 package se.jdr.repository;
 
-import java.util.Collection;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,12 +12,16 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
 	User findUserByUserId(String userId);
 
-	@Query("select u from #{#entityName} u where u.firstname like %:fName% and u.lastname like %:lName% and u.username like :uName")
-	Collection<User> getUser(@Param("fName") String firstname, @Param("lName") String lastname,
-			@Param("uName") String username);
+	User findByUsername(String username);
 
-	Collection<User> findByTeamId(Long teamId);
+	@Query("select u from #{#entityName} u where u.firstname like %:fName% and u.lastname like %:lName%")
+	Page<User> getUser(@Param("fName") String firstname, @Param("lName") String lastname, Pageable pageable);
+
+	Page<User> findByTeamId(Long teamId, Pageable pageable);
 
 	Long countByTeamId(Long teamId);
+
+	Page<User> findByFirstName(String firstname, Pageable pageable);
+
 
 }

@@ -31,7 +31,6 @@ public class UserServiceTest extends AbstractTest {
 	private String title = "title";
 	private String description = "description";
 
-
 	@Before
 	public void prepare() throws ServiceException {
 		userService.setWorkItemService(workItemService);
@@ -48,13 +47,13 @@ public class UserServiceTest extends AbstractTest {
 
 	@Test
 	public void canGetByFirstname() throws ServiceException {
-		Collection<User> fetchedUsers = userService.getByFirstname(createdUser.getFirstname());
+		Collection<User> fetchedUsers = userService.getByFirstname(createdUser.getFirstname(), 0, 10);
 		assertTrue(fetchedUsers.stream().anyMatch(object -> object.equals(createdUser)));
 	}
 
 	@Test
 	public void canGetByLastname() throws ServiceException {
-		Collection<User> fetchedUsers = userService.getByLastname(createdUser.getLastname());
+		Collection<User> fetchedUsers = userService.getByLastname(createdUser.getLastname(), 0, 10);
 		assertTrue(fetchedUsers.stream().anyMatch(object -> object.equals(createdUser)));
 	}
 	

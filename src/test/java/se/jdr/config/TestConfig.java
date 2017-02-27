@@ -1,6 +1,5 @@
 package se.jdr.config;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -32,7 +31,6 @@ public class TestConfig {
 		return new HikariDataSource(cfg);
 	}
 
-
 	@Bean
 	JpaTransactionManager transactionManager(EntityManagerFactory factory) {
 		return new JpaTransactionManager(factory);
@@ -57,9 +55,5 @@ public class TestConfig {
 
 		return factory;
 	}
-	
-	@Bean
-	EntityManager entityManager() {
-		return entityManagerFactory().getObject().createEntityManager();
-	}
+
 }

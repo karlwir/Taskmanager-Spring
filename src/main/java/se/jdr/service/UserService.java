@@ -68,32 +68,31 @@ public class UserService extends BaseService<User, UserRepository> {
 			return repository.save(user);
 		});
 	}
-
-	public Collection<User> getUsersByTeamId(Long teamId) throws ServiceException {
-		return execute(() -> repository.findByTeamId(teamId));
-	}
-
-	public User getUserByUserId(String userId) throws ServiceException {
-		return execute(() -> repository.findUserByUserId(userId));
-	}
-
-	public Collection<User> getUser(String firstname, String lastname, String username) throws ServiceException {
-		return execute(() -> repository.getUser(firstname, lastname, username));
-	}
-
-	public Collection<User> getByFirstname(String firstname) throws ServiceException {
-		return getUser(firstname, "%", "%");
-	}
-
-	public Collection<User> getByLastname(String lastname) throws ServiceException {
-		return getUser("%", lastname, "%");
-	}
-
+	
 	public User getByUsername(String username) throws ServiceException {
-		Collection<User> usersByUsername = getUser("%", "%", username);
-		return (usersByUsername.iterator().hasNext()) ? usersByUsername.iterator().next() : null;
+		return execute(() -> repository.findByUsername(username));
 	}
 
+	public Collection<User> getUserByName(String firstname, String lastname, int pageNumber, int pageSize) throws ServiceException {
+		return execute(() -> repository.getUser(firstname, lastname, createPageRequest(pageNumber, pageSize)).getContent());
+	}
+
+	public Collection<User> getByFirstname(String firstname, int pageNumber, int pageSize) throws ServiceException {
+		return getUserByName(firstname, "%", pageNumber, pageSize);
+	}
+
+	public Collection<User> getByLastname(String lastname, int pageNumber, int pageSize) throws ServiceException {
+		return getUserByName("%", lastname, pageNumber, pageSize);
+	}
+	
+	public Collection<User> getByTeamId(Long teamId, int pageNumber, int pageSize) throws ServiceException {
+		return execute(() -> repository.findByTeamId(teamId, createPageRequest(pageNumber, pageSize)).getContent());
+	}
+	
+	public Long countByTeamId(Long teamId) throws ServiceException {
+		return execute(() -> repository.countByTeamId(teamId));
+	}
+	
 	private String generateHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}

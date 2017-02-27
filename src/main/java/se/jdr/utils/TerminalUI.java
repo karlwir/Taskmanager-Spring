@@ -3,26 +3,26 @@ package se.jdr.utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Scanner;
-
-import org.springframework.data.domain.Page;
 
 import se.jdr.model.User;
 import se.jdr.model.WorkItem;
 import se.jdr.model.WorkItem.Status;
 import se.jdr.service.ServiceException;
 import se.jdr.service.ServiceManager;
+import se.jdr.service.ServiceTransaction.Action;
 import se.jdr.service.UserService;
 import se.jdr.service.WorkItemService;
 
 public class TerminalUI {
 
+	private int currentPage= 0;
+	private static final int PAGE_SIZE = 10;
+
 	private Scanner scanner;
 	private String input;
 	private User selectedUser = null;
 	private Collection<User> userCollection;
-	private Page<User> userPage;
 	private boolean viewNextPage = false;
 	private WorkItem selectedWorkItem = null;
 	private Collection<WorkItem> workItemCollection;
@@ -36,14 +36,14 @@ public class TerminalUI {
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
-	
+
 	public void mainMenu(ServiceManager serviceManager, User auditor) throws ServiceException {
 		boolean exit = false;
 
 		print("\nLogged in as " + ANSI_CYAN + auditor.getFirstname() + " " + auditor.getLastname() + ANSI_RESET
-				+ ". You have " + ANSI_CYAN + serviceManager.getWorkItemService().getByUser(auditor).size()
-				+ ANSI_RESET + " assigned workitems.");
-		
+				+ ". You have " + ANSI_CYAN + serviceManager.getWorkItemService().getByUser(auditor).size() + ANSI_RESET
+				+ " assigned workitems.");
+
 		while (!exit) {
 			printSelected();
 
@@ -75,7 +75,8 @@ public class TerminalUI {
 		while (!exit) {
 			printSelected();
 			switch (inputString("\n" + "Workitem - Choose action: \n " + ANSI_CYAN
-					+ " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (4) View revisions, (back) Back " + ANSI_RESET)) {
+					+ " (1) Add Workitem, (2) Find Workitem, (3) Update Workitem, (4) View revisions, (back) Back "
+					+ ANSI_RESET)) {
 			case "1":
 				print("\n" + "Add Workitem:");
 				selectedWorkItem = workItemService.createWorkItem(inputString("Title: "), inputString("Description: "));
@@ -179,26 +180,17 @@ public class TerminalUI {
 				switch (inputString("\n" + "Find User: \n" + ANSI_CYAN
 						+ " (1) By firstname, (2) By lastname, (3) By username, (4) Get all" + ANSI_RESET)) {
 				case "1":
-					userCollection = userService.getByFirstname(inputString("Firstname: "));
-					selectedUser = selectFromCollection(userCollection);
+					String firstname = inputString("Firstname: ");
+					selectedUser = selectFromPage(() -> userService.getByFirstname(firstname, currentPage, PAGE_SIZE));
 					break;
 				case "2":
-					userCollection = userService.getByLastname(inputString("Lastname: "));
-					selectedUser = selectFromCollection(userCollection);
+					selectedUser = selectFromPage(() -> userService.getByLastname(inputString("Lastname: "), currentPage, PAGE_SIZE));
 					break;
 				case "3":
 					selectedUser = userService.getByUsername(inputString("Username: "));
 					break;
 				case "4":
-					viewNextPage = false;
-					userPage = userService.getAll(0);
-					selectedUser = selectFromPage(userPage);
-					while(viewNextPage) {
-						Page<User> previous = userPage;
-						userPage = userService.getAll(previous.nextPageable());
-						viewNextPage = false;
-						selectedUser = selectFromPage(userPage);
-					}
+					selectedUser = selectFromPage(() -> userService.getAll(currentPage, PAGE_SIZE));
 					break;
 				case "back":
 					exit = true;
@@ -257,30 +249,71 @@ public class TerminalUI {
 		}
 	}
 
-	private <T> T selectFromPage(Page<T> page) {
-		if (page.getSize() == 0) {
-			print("No result");
-			return null;
+//	private <T> T selectFromPage(Collection<T> page) {
+//		if (page.size() == 0) {
+//			print("No result");
+//			return null;
+//		}
+//		ArrayList<T> list = new ArrayList<>();
+//		list.addAll(page);
+//		for (int i = 0; i < list.size(); i++) {
+//			System.out.println(ANSI_CYAN + "(" + (i + 1) + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
+//		}
+//		if (page.size() == 10) {
+//			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET
+//					+ " Next page with " + ANSI_CYAN + "(11)" + ANSI_RESET);
+//		} else {
+//			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET);
+//		}
+//		scanner = new Scanner(System.in);
+//		int command = scanner.nextInt();
+//		if (command == 11 && page.size() == 10) {
+//			viewNextPage = true;
+//			return null;
+//		} else if (command > list.size() || command == 0) {
+//			return null;
+//		} else {
+//			return list.get(command - 1);
+//		}
+//	}
+
+	private <T> T selectFromPage(Action<Collection<T>> action) throws ServiceException {
+		viewNextPage = true;
+		currentPage = 0;
+		
+		while (viewNextPage) {
+			Collection<T> collection = action.execute();
+
+			if (collection.size() == 0) {
+				print("No result...");
+				return null;
+			}
+
+			ArrayList<T> list = new ArrayList<>();
+			list.addAll(collection);
+
+			for (int i = 0; i < list.size(); i++) {
+				print(ANSI_CYAN + "(" + (i + 1) + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
+			}
+
+			if (collection.size() == PAGE_SIZE) {
+				print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET
+						+ " Next page with " + ANSI_CYAN + "(11)" + ANSI_RESET);
+			} else {
+				print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET);
+			}
+			scanner = new Scanner(System.in);
+			int command = scanner.nextInt();
+			if (command == 11 && collection.size() == PAGE_SIZE) {
+				++currentPage;
+				continue;
+			} else if (command >= 1 && command <= 10) {
+				return list.get(command - 1);
+			} else {
+				break;
+			}
 		}
-		List<T> list = page.getContent();
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(ANSI_CYAN + "(" + (i + 1) + ")" + ANSI_PURPLE + " " + list.get(i) + ANSI_RESET);
-		}
-		if(page.hasNext()){
-			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET + " Next page with " + ANSI_CYAN + "(11)" + ANSI_RESET);			
-		} else {
-			print("Select with " + ANSI_CYAN + "(#)" + ANSI_RESET + " Exit with " + ANSI_CYAN + "(0)" + ANSI_RESET);			
-		}
-		scanner = new Scanner(System.in);
-		int command = scanner.nextInt();
-		if (command == 11 && page.hasNext()) {
-			viewNextPage = true;
-			return null;
-		} else if(command > list.size() || command == 0) {
-			return null;
-		} else {
-			return list.get(command - 1);			
-		}
+		return null;
 	}
 
 	private <T> T selectFromCollection(Collection<T> collection) {
